@@ -14,6 +14,9 @@ public class Constants {
             "android.permission.INTERNET"
     };
 
+    /** Server IP where Tron is hosted. **/
+    public static final String SERVER_IP = "198.199.117.243";
+
     public Constants() {
 
     }

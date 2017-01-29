@@ -13,6 +13,7 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.dleaman.hermes.R;
 import com.dleaman.hermes.models.ObservableObject;
 
 import static com.dleaman.hermes.models.Constants.SMS_RECEIVED;
@@ -29,10 +30,6 @@ public class SmsReceiver extends BroadcastReceiver {
     private ComponentName mReceiver;
     private Context mContext;
 
-    public SmsReceiver() {
-
-    }
-
     public SmsReceiver(Context context) {
         mContext = context;
         mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -43,7 +40,6 @@ public class SmsReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "onReceive called.");
-
 
         if (intent.getAction().equalsIgnoreCase(SMS_RECEIVED)) {
             Bundle bundle = intent.getExtras();
@@ -69,7 +65,6 @@ public class SmsReceiver extends BroadcastReceiver {
                         ObservableObject.getInstance().updateValue("msgBody = " + msgBody);
                     }
                 }
-
             }
         }
     }
@@ -82,11 +77,7 @@ public class SmsReceiver extends BroadcastReceiver {
         Toast.makeText(mContext, "Enabled logging", Toast.LENGTH_SHORT).show();
 
         //Let us also show a notification
-        Notification notification = new Notification.Builder(mContext.getApplicationContext())
-                .setContentTitle("SMS Logger Running")
-                .setContentText("Status: Logging..")
-                .setSmallIcon(android.R.drawable.ic_btn_speak_now)
-                .build();
+        Notification notification = buildNotification();
 
         notification.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
 
@@ -101,5 +92,13 @@ public class SmsReceiver extends BroadcastReceiver {
         Toast.makeText(mContext, "Disabled logging", Toast.LENGTH_SHORT).show();
 
         mNotificationManager.cancel(NOTIFICATION);
+    }
+
+    public Notification buildNotification() {
+        return new Notification.Builder(mContext.getApplicationContext())
+                .setContentTitle("SMS Logger Running")
+                .setContentText("Status: Logging..")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .build();
     }
 }

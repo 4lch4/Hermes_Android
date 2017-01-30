@@ -24,7 +24,6 @@
             </intent-filter>
         </activity>
 
-        <!--suppress AndroidDomInspection -->
         <receiver
             android:name="com.dleaman.hermes.utils.SmsReceiver">
             <intent-filter android:priority="999">

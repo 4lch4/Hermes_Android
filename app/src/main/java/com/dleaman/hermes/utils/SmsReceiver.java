@@ -30,6 +30,14 @@ public class SmsReceiver extends BroadcastReceiver {
     private ComponentName mReceiver;
     private Context mContext;
 
+    /**
+     * Required to avoid random Unable to instantiate receiver com.dleaman.hermes.utils.SmsReceiver
+     * errors that occur when the receiver is moved to the background by the service.
+     */
+    public SmsReceiver() {
+
+    }
+
     public SmsReceiver(Context context) {
         mContext = context;
         mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

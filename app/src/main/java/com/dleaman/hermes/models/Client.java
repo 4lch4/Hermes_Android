@@ -14,7 +14,10 @@ import java.net.Socket;
  */
 
 public class Client {
-    private static final String TAG = "Client";
+    /**
+     * Log tag for debugging and error checking.
+     */
+    private static final String LOG_TAG = "Client";
     private BufferedReader mSocketInput;
     private OutputStream mSocketOutput;
     private ClientCallback mListener;
@@ -40,13 +43,13 @@ public class Client {
                     mSocketInput = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
 
                     new ReceiveThread().start();
-                    
-                    if(mListener != null)
+
+                    if (mListener != null)
                         mListener.onConnect(mSocket);
 
-                    Log.d(TAG, "Connection begun.");
+                    Log.d(LOG_TAG, "Connection begun.");
                 } catch (IOException e) {
-                    Log.e(TAG, "Error connecting to socket:");
+                    Log.e(LOG_TAG, "Error connecting to socket:");
                     e.printStackTrace();
                 }
             }
@@ -71,21 +74,6 @@ public class Client {
         }
     }
 
-    private class ReceiveThread extends Thread implements Runnable {
-        public void run() {
-            String message;
-            try {
-                while ((message = mSocketInput.readLine()) != null) {   // each line must end with a \n to be received
-                    if (mListener != null)
-                        mListener.onMessage(message);
-                }
-            } catch (IOException e) {
-                if (mListener != null)
-                    mListener.onDisconnect(mSocket, e.getMessage());
-            }
-        }
-    }
-
     public void setClientCallback(ClientCallback listener) {
         mListener = listener;
     }
@@ -102,5 +90,20 @@ public class Client {
         void onDisconnect(Socket socket, String message);
 
         void onConnectError(Socket socket, String message);
+    }
+
+    private class ReceiveThread extends Thread implements Runnable {
+        public void run() {
+            String message;
+            try {
+                while ((message = mSocketInput.readLine()) != null) {   // each line must end with a \n to be received
+                    if (mListener != null)
+                        mListener.onMessage(message);
+                }
+            } catch (IOException e) {
+                if (mListener != null)
+                    mListener.onDisconnect(mSocket, e.getMessage());
+            }
+        }
     }
 }

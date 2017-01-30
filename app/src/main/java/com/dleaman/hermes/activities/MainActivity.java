@@ -27,11 +27,6 @@ public class MainActivity extends AppCompatActivity {
     ImageView mPauseButton;
 
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -106,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!isTronServiceOn())
                     startService(new Intent(MainActivity.this, TronService.class));
+
                 mStartButton.setVisibility(GONE);
                 mPauseButton.setVisibility(VISIBLE);
             }

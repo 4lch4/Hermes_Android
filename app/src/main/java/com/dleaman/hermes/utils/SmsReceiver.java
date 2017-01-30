@@ -20,13 +20,15 @@ import static com.dleaman.hermes.models.Constants.SMS_RECEIVED;
 
 /**
  * Created by dleam on 1/28/2017.
+ * The {@link BroadcastReceiver} responsible for forwarding sent and received text messages. If the
+ * device receives a text message, it's forwarded to the appropriate instance of Tron and then sent
+ * to the correct user.
  */
-
 public class SmsReceiver extends BroadcastReceiver {
+    static final int NOTIFICATION = 81237;
     private static final String TAG = "SmsReceiver";
     private NotificationManager mNotificationManager;
     private PackageManager mPackageManager;
-    static final int NOTIFICATION = 81237;
     private ComponentName mReceiver;
     private Context mContext;
 
@@ -77,6 +79,11 @@ public class SmsReceiver extends BroadcastReceiver {
         }
     }
 
+    /**
+     * Enables the {@link BroadcastReceiver} so that it's able to receive text messages that are
+     * sent to the device. Also displays a {@link Notification} in the notification bar that is not
+     * dismissible until the receiver is disabled.
+     */
     public void enableBroadcastReceiver() {
         mPackageManager.setComponentEnabledSetting(mReceiver,
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
@@ -92,6 +99,10 @@ public class SmsReceiver extends BroadcastReceiver {
         mNotificationManager.notify(NOTIFICATION, notification);
     }
 
+    /**
+     * Disables the {@link BroadcastReceiver} and removes the {@link Notification} from the
+     * notification bar.
+     */
     public void disableBroadcastReceiver() {
         mPackageManager.setComponentEnabledSetting(mReceiver,
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
@@ -102,6 +113,12 @@ public class SmsReceiver extends BroadcastReceiver {
         mNotificationManager.cancel(NOTIFICATION);
     }
 
+    /**
+     * Builds the {@link Notification} that is displayed in the notification bar to indicate that
+     * the SMS {@link BroadcastReceiver} is enabled.
+     *
+     * @return {@link Notification}
+     */
     public Notification buildNotification() {
         return new Notification.Builder(mContext.getApplicationContext())
                 .setContentTitle("SMS Logger Running")

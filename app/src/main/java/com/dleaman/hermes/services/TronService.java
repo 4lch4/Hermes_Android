@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.telephony.SmsManager;
 
 import com.dleaman.hermes.models.Client;
 import com.dleaman.hermes.models.Constants;
@@ -28,6 +29,7 @@ import static com.dleaman.hermes.models.Constants.SERVER_IP;
 
 public class TronService extends Service implements Observer {
     private Client mPrimarySocket;
+    private String mPrevNumber = "+17075604247";
     SmsReceiver mSmsReceiver;
 
     public TronService() {
@@ -83,6 +85,12 @@ public class TronService extends Service implements Observer {
         return new Client.ClientCallback() {
             @Override
             public void onMessage(final String message) {
+                if(message.startsWith("smsMsg")) {
+                    String smsBody = message.substring(7);
+                    System.out.println("smsBody = " + smsBody);
+                    SmsManager manager = SmsManager.getDefault();
+                    manager.sendTextMessage(mPrevNumber, "+19517078144", smsBody, null, null);
+                }
                 System.out.println("message = " + message);
             }
 

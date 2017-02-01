@@ -63,11 +63,16 @@ public class MainActivity extends AppCompatActivity {
      * granted, this method will query the device and ask the user for permission.
      */
     private void checkPermissions() {
+        boolean check = false;
+
         if (Build.VERSION.SDK_INT >= 23) {
             for (String permission : PERMISSIONS) {
                 if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED)
-                    requestPermissions(PERMISSIONS, 0);
+                    check = true;
             }
+
+            if(check)
+                requestPermissions(PERMISSIONS, 0);
         }
     }
 

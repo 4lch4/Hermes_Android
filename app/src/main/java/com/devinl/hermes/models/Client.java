@@ -1,4 +1,4 @@
-package com.dleaman.hermes.models;
+package com.devinl.hermes.models;
 
 import android.util.Log;
 

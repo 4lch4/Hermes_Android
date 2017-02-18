@@ -1,4 +1,4 @@
-package com.dleaman.hermes;
+package com.devinl.hermes;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.dleaman.hermes", appContext.getPackageName());
+        assertEquals("com.devinl.hermes", appContext.getPackageName());
     }
 }

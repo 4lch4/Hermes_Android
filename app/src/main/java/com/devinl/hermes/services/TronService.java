@@ -1,4 +1,4 @@
-package com.dleaman.hermes.services;
+package com.devinl.hermes.services;
 
 import android.app.Service;
 import android.content.Context;
@@ -11,15 +11,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.telephony.SmsManager;
 
-import com.dleaman.hermes.models.Client;
-import com.dleaman.hermes.models.ObservableObject;
-import com.dleaman.hermes.utils.SmsReceiver;
+import com.devinl.hermes.models.Client;
+import com.devinl.hermes.models.ObservableObject;
+import com.devinl.hermes.utils.SmsReceiver;
 
 import java.net.Socket;
 import java.util.Observable;
 import java.util.Observer;
 
-import static com.dleaman.hermes.models.Constants.SERVER_IP;
+import static com.devinl.hermes.models.Constants.SERVER_IP;
 
 /**
  * Created by dleam on 1/29/2017.
@@ -41,7 +41,7 @@ public class TronService extends Service implements Observer {
      */
     private String mPrevNumber = "+17075604247";
     /**
-     * {@link com.dleaman.hermes.models.Client} object for network connections
+     * {@link com.devinl.hermes.models.Client} object for network connections
      */
     private Client mPrimarySocket;
 
@@ -119,10 +119,10 @@ public class TronService extends Service implements Observer {
     }
 
     /**
-     * Build the {@link com.dleaman.hermes.models.Client.ClientCallback} that when a text message is
+     * Build the {@link com.devinl.hermes.models.Client.ClientCallback} that when a text message is
      * received from the remote node server, will forward it to the correct contact.
      *
-     * @return {@link com.dleaman.hermes.models.Client.ClientCallback}
+     * @return {@link com.devinl.hermes.models.Client.ClientCallback}
      */
     private Client.ClientCallback buildClientCallback() {
         return new Client.ClientCallback() {

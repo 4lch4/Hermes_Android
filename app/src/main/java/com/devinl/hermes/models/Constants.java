@@ -1,4 +1,4 @@
-package com.dleaman.hermes.models;
+package com.devinl.hermes.models;
 
 /**
  * Created by dleam on 1/28/2017.

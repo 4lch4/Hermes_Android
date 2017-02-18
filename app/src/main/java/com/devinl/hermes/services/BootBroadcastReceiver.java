@@ -1,4 +1,4 @@
-package com.dleaman.hermes.services;
+package com.devinl.hermes.services;
 
 import android.content.Context;
 import android.content.Intent;

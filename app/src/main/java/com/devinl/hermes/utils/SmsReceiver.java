@@ -1,4 +1,4 @@
-package com.dleaman.hermes.utils;
+package com.devinl.hermes.utils;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -13,10 +13,10 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.dleaman.hermes.R;
-import com.dleaman.hermes.models.ObservableObject;
+import com.devinl.hermes.R;
+import com.devinl.hermes.models.ObservableObject;
 
-import static com.dleaman.hermes.models.Constants.SMS_RECEIVED;
+import static com.devinl.hermes.models.Constants.SMS_RECEIVED;
 
 /**
  * Created by dleam on 1/28/2017.
@@ -33,7 +33,7 @@ public class SmsReceiver extends BroadcastReceiver {
     private Context mContext;
 
     /**
-     * Required to avoid random Unable to instantiate receiver com.dleaman.hermes.utils.SmsReceiver
+     * Required to avoid random Unable to instantiate receiver com.devinl.hermes.utils.SmsReceiver
      * errors that occur when the receiver is moved to the background by the service.
      */
     public SmsReceiver() {

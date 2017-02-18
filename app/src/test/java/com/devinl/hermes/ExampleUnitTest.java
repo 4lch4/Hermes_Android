@@ -1,4 +1,4 @@
-package com.dleaman.hermes;
+package com.devinl.hermes;
 
 import org.junit.Test;
 

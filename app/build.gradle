@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "24.0.0"
     defaultConfig {
-        applicationId "com.dleaman.hermes"
+        applicationId "com.devinl.hermes"
         minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
@@ -24,9 +24,10 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:appcompat-v7:25.1.1'
     testCompile 'junit:junit:4.12'
 
+    compile 'com.joanzapata.iconify:android-iconify-material:2.2.2'
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }

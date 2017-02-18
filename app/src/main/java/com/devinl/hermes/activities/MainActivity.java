@@ -2,21 +2,29 @@ package com.devinl.hermes.activities;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 
 import com.devinl.hermes.R;
 import com.devinl.hermes.services.TronService;
+import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.MaterialCommunityModule;
+import com.joanzapata.iconify.fonts.MaterialIcons;
+import com.joanzapata.iconify.fonts.MaterialModule;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.devinl.hermes.models.Constants.PERMISSIONS;
 
 public class MainActivity extends AppCompatActivity {
+    @BindView(R.id.primaryBtn)
+    Button mPrimaryBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         /** Initialize Iconify **/
-        Iconify.with(new MaterialCommunityModule());
+        Iconify.with(new MaterialModule());
 
         /** Verify app has permissions to view contacts, etc **/
         checkPermissions();
@@ -41,14 +49,13 @@ public class MainActivity extends AppCompatActivity {
      * so.
      */
     private void initializeControls() {
-        /*if (isTronServiceOn()) {
-            mStartButton.setVisibility(GONE);
-            mPauseButton.setVisibility(VISIBLE);
+        if (isTronServiceOn()) {
+            mPrimaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_pause_circle_outline));
+            mPrimaryBtn.setOnClickListener(getPauseButtonListener());
+        } else {
+            mPrimaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_play_circle_outline));
+            mPrimaryBtn.setOnClickListener(getStartButtonListener());
         }
-
-        mStartButton.setOnClickListener(getStartButtonListener());
-
-        mPauseButton.setOnClickListener(getPauseButtonListener());*/
     }
 
     // TODO: Account for a user not wanting to give permission for contacts
@@ -66,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                     check = true;
             }
 
-            if(check)
+            if (check)
                 requestPermissions(PERMISSIONS, 0);
         }
     }
@@ -95,18 +102,17 @@ public class MainActivity extends AppCompatActivity {
      *
      * @return {@link android.view.View.OnClickListener}
      */
-    /*public View.OnClickListener getStartButtonListener() {
+    public View.OnClickListener getStartButtonListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!isTronServiceOn())
                     startService(new Intent(MainActivity.this, TronService.class));
 
-                mStartButton.setVisibility(GONE);
-                mPauseButton.setVisibility(VISIBLE);
+                initializeControls();
             }
         };
-    }*/
+    }
 
 
     /**
@@ -115,16 +121,15 @@ public class MainActivity extends AppCompatActivity {
      *
      * @return {@link android.view.View.OnClickListener}
      */
-    /*public View.OnClickListener getPauseButtonListener() {
+    public View.OnClickListener getPauseButtonListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isTronServiceOn())
                     stopService(new Intent(MainActivity.this, TronService.class));
 
-                mStartButton.setVisibility(VISIBLE);
-                mPauseButton.setVisibility(GONE);
+                initializeControls();
             }
         };
-    }*/
+    }
 }

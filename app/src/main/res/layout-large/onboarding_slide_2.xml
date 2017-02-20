@@ -28,6 +28,35 @@
         android:textColor="@android:color/white"
         android:textSize="@dimen/slide_desc_lg" />
 
-    <!-- TODO: Add image of sending initiate command to Tron -->
+    <ImageView
+        android:id="@+id/img_initiate_success"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/slide_2_desc"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/successful_initiation"
+        android:src="@drawable/initiate_success" />
 
+    <TextView
+        android:id="@+id/slide_2_desc_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/img_initiate_success"
+        android:layout_centerHorizontal="true"
+        android:layout_alignStart="@id/slide_2_desc"
+        android:layout_margin="10dp"
+        android:text="@string/onboarding_slide_2_desc_2"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/slide_desc_lg" />
+
+    <ImageView
+        android:id="@+id/img_initiate_failure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/slide_2_desc_2"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/unsuccessful_initiation"
+        android:src="@drawable/initiate_failure" />
 </RelativeLayout>

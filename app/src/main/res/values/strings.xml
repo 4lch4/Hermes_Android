@@ -16,12 +16,15 @@
         \n2) How to read/reply to messages.
     </string>
 
-    <string name="onboarding_slide_2_title">Slide 2 title</string>
-    <string name="onboarding_slide_2_desc">Slide 2 description</string>
+    <string name="onboarding_slide_2_title">Initial Setup</string>
+    <string name="onboarding_slide_2_desc">
+        You will receive a 5 character string at the end of this introduction.
+        \nIf you have Tron added as a friend or on your server, send a PM like so and you\'ll be ready:
+        \n\n+initiate &lt;random string&gt;
+    </string>
 
     <string name="onboarding_slide_3_title">Slide 3 title</string>
     <string name="onboarding_slide_3_desc">Slide 3 description</string>
     <string name="dd_logo_desc">Discord Direct logo</string>
-
 
 </resources>

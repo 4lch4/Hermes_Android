@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blurple"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/slide_2_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dots_margin_bottom"
+        android:layout_marginTop="@dimen/dots_margin_bottom"
+        android:text="@string/onboarding_slide_2_title"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/slide_title_lg"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/slide_2_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/slide_2_title"
+        android:layout_centerHorizontal="true"
+        android:text="@string/onboarding_slide_2_desc"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/slide_desc_lg" />
+
+    <!-- TODO: Add image of sending initiate command to Tron -->
+
+</RelativeLayout>

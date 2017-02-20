@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import com.devinl.hermes.R;
 import com.devinl.hermes.services.TronService;
+import com.devinl.hermes.utils.PrefManager;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialIcons;
@@ -23,14 +24,19 @@ import butterknife.ButterKnife;
 import static com.devinl.hermes.models.Constants.PERMISSIONS;
 
 public class MainActivity extends AppCompatActivity {
-    @BindView(R.id.primaryBtn)
-    Button mPrimaryBtn;
+    @BindView(R.id.primaryBtn) Button mPrimaryBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (new PrefManager(this).isFirstTimeLaunch()) {
+            startActivity(new Intent(this, OnboardingActivity.class));
+            finish();
+        }
+
         setContentView(R.layout.activity_main);
-        /** Bind ButterKnife **/
+
+        /** Initialize ButterKnife **/
         ButterKnife.bind(this);
 
         /** Initialize Iconify **/

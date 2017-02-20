@@ -16,7 +16,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.devinl.hermes.activities.MainActivity">
+
+        <activity
+            android:name=".activities.MainActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,15 +27,20 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.devinl.hermes.utils.SmsReceiver">
+        <activity
+            android:name=".activities.OnboardingActivity"
+            android:label="@string/title_activity_onboarding"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <receiver android:name=".utils.SmsReceiver">
             <intent-filter android:priority="999">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
 
-        <service android:name="com.devinl.hermes.services.TronService" />
+        <service android:name=".services.TronService" />
 
-        <receiver android:name="com.devinl.hermes.services.BootBroadcastReceiver">
+        <receiver android:name=".services.BootBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

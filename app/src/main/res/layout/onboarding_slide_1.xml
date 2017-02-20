@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blurple">
+
+    <ImageView
+        android:id="@+id/dd_logo"
+        android:layout_width="@dimen/img_width_height"
+        android:layout_height="@dimen/img_width_height"
+        android:layout_above="@+id/slide_1_title"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/dd_logo_desc"
+        android:src="@drawable/ic_hermes"
+        android:tint="@color/fullWhite" />
+
+    <TextView
+        android:id="@id/slide_1_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/dots_margin_bottom"
+        android:layout_marginTop="@dimen/dots_margin_bottom"
+        android:text="@string/onboarding_slide_1_title"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/slide_title"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/slide_2_title"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/slide_1_title"
+        android:layout_centerHorizontal="true"
+        android:text="@string/onboarding_slide_1_desc"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/slide_desc" />
+
+</RelativeLayout>

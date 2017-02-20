@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.devinl.hermes.R;
+import com.devinl.hermes.SetupActivity;
 import com.devinl.hermes.services.TronService;
 import com.devinl.hermes.utils.PrefManager;
 import com.joanzapata.iconify.IconDrawable;
@@ -29,9 +30,13 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PrefManager prefManager = new PrefManager(this);
 
-        if (new PrefManager(this).isFirstTimeLaunch()) {
+        if (prefManager.isFirstTimeLaunch()) {
             startActivity(new Intent(this, OnboardingActivity.class));
+            finish();
+        } else if (prefManager.isConfigNeeded()) {
+            startActivity(new Intent(this, SetupActivity.class));
             finish();
         }
 
@@ -39,9 +44,6 @@ public class MainActivity extends BaseActivity {
 
         /** Initialize ButterKnife **/
         ButterKnife.bind(this);
-
-        /** Verify app has permissions to view contacts, etc **/
-        checkPermissions();
 
         /** Initialize view controls and service **/
         initializeControls();
@@ -59,26 +61,6 @@ public class MainActivity extends BaseActivity {
         } else {
             mPrimaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_play_circle_outline));
             mPrimaryBtn.setOnClickListener(getStartButtonListener());
-        }
-    }
-
-    // TODO: Account for a user not wanting to give permission for contacts
-
-    /**
-     * If the device is using Android >= 23 and the app doesn't have the necessary permissions
-     * granted, this method will query the device and ask the user for permission.
-     */
-    private void checkPermissions() {
-        boolean check = false;
-
-        if (Build.VERSION.SDK_INT >= 23) {
-            for (String permission : PERMISSIONS) {
-                if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED)
-                    check = true;
-            }
-
-            if (check)
-                requestPermissions(PERMISSIONS, 0);
         }
     }
 

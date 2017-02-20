@@ -31,5 +31,10 @@
     <string name="dd_logo_desc">Discord Direct logo</string>
     <string name="unsuccessful_initiation">Unsuccessful initiation.</string>
     <string name="successful_initiation">Successful initiation.</string>
-
+    <string name="token_placeholder">+initiate 1234567890</string>
+    <string name="token_desc">
+        The above code is your activation token.
+        \nSend it to Tron and you\'re good to go!
+    </string>
+    <string name="btn_generate_token">Generate New Token</string>
 </resources>

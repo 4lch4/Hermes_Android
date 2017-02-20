@@ -11,7 +11,7 @@ public class PrefManager {
     // Shared preferences file name
     private static final String PREF_NAME = "hermes-welcome";
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
-    private static final String USER_ID = "UserID";
+    private static final String USER_TOKEN = "UserToken";
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
     private Context mContext;
@@ -34,10 +34,10 @@ public class PrefManager {
     }
 
     public boolean isConfigNeeded() {
-        return getUserId() == null;
+        return getUserToken() == null;
     }
 
-    public String getUserId() {
-        return mPref.getString(USER_ID, null);
+    public String getUserToken() {
+        return mPref.getString(USER_TOKEN, null);
     }
 }

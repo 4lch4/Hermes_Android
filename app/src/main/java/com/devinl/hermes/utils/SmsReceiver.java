@@ -19,7 +19,7 @@ import com.devinl.hermes.models.ObservableObject;
 import static com.devinl.hermes.models.Constants.SMS_RECEIVED;
 
 /**
- * Created by dleam on 1/28/2017.
+ * Created by Alcha on 1/28/2017.
  * The {@link BroadcastReceiver} responsible for forwarding sent and received text messages. If the
  * device receives a text message, it's forwarded to the appropriate instance of Tron and then sent
  * to the correct user.

@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
 /**
- * Created by dleam on 1/29/2017.
+ * Created by Alcha on 1/29/2017.
  * Receives a broadcast when the device is booted and ensures the {@link TronService} is running in
  * the background.
  */

@@ -1,7 +1,7 @@
 package com.devinl.hermes.models;
 
 /**
- * Created by dleam on 1/28/2017.
+ * Created by Alcha on 1/28/2017.
  * Basic class for storing constants necessary for running the app. This makes it easier to keep
  * track of the various constants and strings used throughout the app.
  */

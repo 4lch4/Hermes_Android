@@ -22,12 +22,14 @@ import java.util.Observer;
 import static com.devinl.hermes.models.Constants.SERVER_IP;
 
 /**
- * Created by dleam on 1/29/2017.
- * {@link Service} responsible for handling the network communication that is performed by Discord
- * Direct. For example, if a user receives a text message on their device, the {@link SmsReceiver}
- * updates an {@link ObservableObject} with the message received so that this service can forward
- * the message to the Tron server. If the user sends a message to a contact, it is sent to this
- * class and forwarded to the correct number.
+ * Created by Alcha on 1/29/2017.
+ * <p>
+ *  {@link Service} responsible for handling the network communication that is performed by Discord
+ *  Direct. For example, if a user receives a text message on their device, the {@link SmsReceiver}
+ *  updates an {@link ObservableObject} with the message received so that this service can forward
+ *  the message to the Tron server. If the user sends a message to a contact, it is sent to this
+ *  class and forwarded to the correct number.
+ * </p>
  */
 
 public class TronService extends Service implements Observer {

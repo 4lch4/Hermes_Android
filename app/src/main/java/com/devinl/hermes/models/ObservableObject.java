@@ -3,7 +3,7 @@ package com.devinl.hermes.models;
 import java.util.Observable;
 
 /**
- * Created by dleam on 1/28/2017.
+ * Created by Alcha on 1/28/2017.
  */
 
 public class ObservableObject extends Observable {

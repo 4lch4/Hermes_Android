@@ -23,12 +23,13 @@ import butterknife.ButterKnife;
 
 import static com.devinl.hermes.models.Constants.PERMISSIONS;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     @BindView(R.id.primaryBtn) Button mPrimaryBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (new PrefManager(this).isFirstTimeLaunch()) {
             startActivity(new Intent(this, OnboardingActivity.class));
             finish();
@@ -38,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
         /** Initialize ButterKnife **/
         ButterKnife.bind(this);
-
-        /** Initialize Iconify **/
-        Iconify.with(new MaterialModule());
 
         /** Verify app has permissions to view contacts, etc **/
         checkPermissions();
@@ -82,24 +80,6 @@ public class MainActivity extends AppCompatActivity {
             if (check)
                 requestPermissions(PERMISSIONS, 0);
         }
-    }
-
-    /**
-     * Check to see if {@link TronService} is currently running and return a boolean indicating the
-     * answer.
-     *
-     * @return {@link Boolean}
-     */
-    private boolean isTronServiceOn() {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (TronService.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

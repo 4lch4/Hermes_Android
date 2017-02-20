@@ -25,7 +25,7 @@ import com.devinl.hermes.utils.PrefManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OnboardingActivity extends AppCompatActivity {
+public class OnboardingActivity extends BaseActivity {
     private static final String LOG_TAG = "OnboardingActivity";
     @BindView(R.id.layoutDots) LinearLayout mDotsLayout;
     @BindView(R.id.container) ViewPager mViewPager;
@@ -35,34 +35,6 @@ public class OnboardingActivity extends AppCompatActivity {
     private PrefManager mPrefManager;
     private TextView[] mDots;
     private int[] mLayouts;
-    ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
-
-        @Override
-        public void onPageSelected(int position) {
-            addBottomDots(position);
-
-            // changing the next button text 'NEXT' / 'GOT IT'
-            if (position == mLayouts.length - 1) {
-                // last page. make button text to GOT IT
-                mBtnNext.setText(getString(R.string.onboarding_finish));
-                mBtnSkip.setVisibility(View.GONE);
-            } else {
-                // still pages are left
-                mBtnNext.setText(getString(R.string.onboarding_next_slide));
-                mBtnSkip.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int arg0) {
-
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +43,8 @@ public class OnboardingActivity extends AppCompatActivity {
         mPrefManager = new PrefManager(this);
 
         setContentView(R.layout.activity_onboarding);
+
+        /** Initialize ButterKnife **/
         ButterKnife.bind(this);
 
         // Create the adapter that will return a fragment for each of the three
@@ -79,7 +53,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
         // Set up the ViewPager with the sections adapter.
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOnPageChangeListener(viewPagerPageChangeListener);
+        mViewPager.addOnPageChangeListener(getOnPageChangeListener());
 
         mLayouts = new int[]{
                 R.layout.onboarding_slide_1,
@@ -109,21 +83,6 @@ public class OnboardingActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -165,6 +124,37 @@ public class OnboardingActivity extends AppCompatActivity {
 
     private int getItem(int i) {
         return mViewPager.getCurrentItem() + i;
+    }
+
+    public ViewPager.OnPageChangeListener getOnPageChangeListener() {
+        return new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int position) {
+                addBottomDots(position);
+
+                // changing the next button text 'NEXT' / 'GOT IT'
+                if (position == mLayouts.length - 1) {
+                    // last page. make button text to GOT IT
+                    mBtnNext.setText(getString(R.string.onboarding_finish));
+                    mBtnSkip.setVisibility(View.GONE);
+                } else {
+                    // still pages are left
+                    mBtnNext.setText(getString(R.string.onboarding_next_slide));
+                    mBtnSkip.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+
+            }
+        };
     }
 
     public class SectionsPagerAdapter extends PagerAdapter {

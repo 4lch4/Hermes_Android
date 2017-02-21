@@ -1,12 +1,7 @@
 package com.devinl.hermes.activities;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
@@ -15,14 +10,10 @@ import com.devinl.hermes.SetupActivity;
 import com.devinl.hermes.services.TronService;
 import com.devinl.hermes.utils.PrefManager;
 import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialIcons;
-import com.joanzapata.iconify.fonts.MaterialModule;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.devinl.hermes.models.Constants.PERMISSIONS;
 
 public class MainActivity extends BaseActivity {
     @BindView(R.id.primaryBtn) Button mPrimaryBtn;

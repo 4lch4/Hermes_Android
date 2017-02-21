@@ -19,16 +19,16 @@ import java.net.Socket;
 import java.util.Observable;
 import java.util.Observer;
 
-import static com.devinl.hermes.models.Constants.SERVER_IP;
+import static com.devinl.hermes.utils.Constants.SERVER_IP;
 
 /**
  * Created by Alcha on 1/29/2017.
  * <p>
- *  {@link Service} responsible for handling the network communication that is performed by Discord
- *  Direct. For example, if a user receives a text message on their device, the {@link SmsReceiver}
- *  updates an {@link ObservableObject} with the message received so that this service can forward
- *  the message to the Tron server. If the user sends a message to a contact, it is sent to this
- *  class and forwarded to the correct number.
+ * {@link Service} responsible for handling the network communication that is performed by Discord
+ * Direct. For example, if a user receives a text message on their device, the {@link SmsReceiver}
+ * updates an {@link ObservableObject} with the message received so that this service can forward
+ * the message to the Tron server. If the user sends a message to a contact, it is sent to this
+ * class and forwarded to the correct number.
  * </p>
  */
 

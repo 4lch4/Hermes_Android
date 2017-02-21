@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.devinl.hermes.R;
 import com.devinl.hermes.models.ObservableObject;
 
-import static com.devinl.hermes.models.Constants.SMS_RECEIVED;
+import static com.devinl.hermes.utils.Constants.SMS_RECEIVED;
 
 /**
  * Created by Alcha on 1/28/2017.

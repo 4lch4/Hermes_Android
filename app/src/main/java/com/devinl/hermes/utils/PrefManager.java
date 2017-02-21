@@ -25,7 +25,7 @@ public class PrefManager {
     }
 
     public boolean isFirstTimeLaunch() {
-        return mPref.getBoolean(IS_FIRST_TIME_LAUNCH, false);
+        return mPref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
 
     public void setFirstTimeLaunch(boolean isFirstTime) {
@@ -39,5 +39,10 @@ public class PrefManager {
 
     public String getUserToken() {
         return mPref.getString(USER_TOKEN, null);
+    }
+
+    public void setUserToken(String userToken) {
+        mEditor.putString(USER_TOKEN, userToken);
+        mEditor.commit();
     }
 }

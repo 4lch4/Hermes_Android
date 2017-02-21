@@ -10,8 +10,6 @@ import com.devinl.hermes.services.TronService;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialModule;
 
-import butterknife.ButterKnife;
-
 /**
  * Created by Alcha on 2/19/2017.
  */

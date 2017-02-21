@@ -68,11 +68,7 @@ public class SmsReceiver extends BroadcastReceiver {
                             smsMessages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
                         }
 
-                        String msgFrom = smsMessages[i].getOriginatingAddress();
-                        ObservableObject.getInstance().updateValue("msgFrom = " + msgFrom);
-
-                        String msgBody = smsMessages[i].getMessageBody();
-                        ObservableObject.getInstance().updateValue("msgBody = " + msgBody);
+                        ObservableObject.getInstance().updateValue(smsMessages[i]);
                     }
                 }
             }

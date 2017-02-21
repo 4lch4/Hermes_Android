@@ -9,17 +9,18 @@ import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.telephony.SmsManager;
+import android.telephony.SmsMessage;
 
-import com.devinl.hermes.models.Client;
+import com.devinl.hermes.models.Message;
 import com.devinl.hermes.models.ObservableObject;
+import com.devinl.hermes.utils.PrefManager;
 import com.devinl.hermes.utils.SmsReceiver;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import java.net.Socket;
 import java.util.Observable;
 import java.util.Observer;
-
-import static com.devinl.hermes.utils.Constants.SERVER_IP;
+import java.util.UUID;
 
 /**
  * Created by Alcha on 1/29/2017.
@@ -38,14 +39,8 @@ public class TronService extends Service implements Observer {
      * {@link TronService}.
      */
     SmsReceiver mSmsReceiver;
-    /**
-     * Temporarily set to always text my tablet.
-     */
-    private String mPrevNumber = "+17075604247";
-    /**
-     * {@link com.devinl.hermes.models.Client} object for network connections
-     */
-    private Client mPrimarySocket;
+    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("messages");
+    private String mUserToken;
 
     public TronService() {
     }
@@ -55,11 +50,7 @@ public class TronService extends Service implements Observer {
         super.onCreate();
         ObservableObject.getInstance().addObserver(this);
 
-        /** Initiate primary socket **/
-        mPrimarySocket = new Client(SERVER_IP, 6969);
-
-        /** Set ClientCallback **/
-        mPrimarySocket.setClientCallback(buildClientCallback());
+        mUserToken = new PrefManager(this).getUserToken();
 
         /** Initiate SmsReceiver using application context **/
         mSmsReceiver = new SmsReceiver(getApplicationContext());
@@ -69,18 +60,12 @@ public class TronService extends Service implements Observer {
     public void onDestroy() {
         super.onDestroy();
 
-        /** Close primary socket **/
-        mPrimarySocket.disconnect();
-
         /** Disable BroadcastReceiver **/
         mSmsReceiver.disableBroadcastReceiver();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        /** Initiate connection with the primary socket **/
-        mPrimarySocket.connect();
-
         /** Enable BroadcastReceiver **/
         mSmsReceiver.enableBroadcastReceiver();
 
@@ -93,67 +78,30 @@ public class TronService extends Service implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        /** Convert received object to String **/
-        String message = o.toString();
+        /** Convert newly received SMSMessage to Message **/
+        Message message = convertToMessage(o);
 
-        /** If message contains the receiving number, if so, query for contact name **/
-        if (message.startsWith("msgFrom = ")) {
+        mDatabase.child(mUserToken)
+                .child(UUID.randomUUID().toString())
+                .setValue(message);
+    }
 
-            /** Set String to actual number without + sign **/
-            String number = message.substring(message.indexOf("+"));
+    private Message convertToMessage(Object o) {
+        SmsMessage smsMessage = (SmsMessage) o;
+        Message message = new Message();
 
-            /** Send contact name or number through the primary socket **/
-            mPrimarySocket.send("Message From: " + getContactName(getApplicationContext(), number));
-        } else if (message.startsWith("msgBody")) {
+        message.setUserToken(mUserToken);
+        message.setFromNum(smsMessage.getOriginatingAddress());
+        message.setFromName(getContactName(this, message.getFromNum()));
+        message.setContent(smsMessage.getMessageBody());
 
-            /** Set message to the actual message content **/
-            message = message.substring(9);
-
-            /** Send message to user through the primary socket **/
-            mPrimarySocket.send(message);
-        }
+        return message;
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-
-    /**
-     * Build the {@link com.devinl.hermes.models.Client.ClientCallback} that when a text message is
-     * received from the remote node server, will forward it to the correct contact.
-     *
-     * @return {@link com.devinl.hermes.models.Client.ClientCallback}
-     */
-    private Client.ClientCallback buildClientCallback() {
-        return new Client.ClientCallback() {
-            @Override
-            public void onMessage(final String message) {
-                if (message.startsWith("smsMsg")) {
-                    String smsBody = message.substring(7);
-                    System.out.println("smsBody = " + smsBody);
-                    SmsManager manager = SmsManager.getDefault();
-                    manager.sendTextMessage(mPrevNumber, "+19517078144", smsBody, null, null);
-                }
-                System.out.println("message = " + message);
-            }
-
-            @Override
-            public void onConnect(Socket socket) {
-                System.out.println("Connection successful.");
-            }
-
-            @Override
-            public void onDisconnect(Socket socket, final String message) {
-                System.out.println("message = " + message);
-            }
-
-            @Override
-            public void onConnectError(Socket socket, final String message) {
-                System.out.println("message = " + message);
-            }
-        };
     }
 
     /**

@@ -10,6 +10,7 @@ import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.telephony.SmsMessage;
+import android.util.Log;
 
 import com.devinl.hermes.models.Message;
 import com.devinl.hermes.models.ObservableObject;
@@ -34,6 +35,8 @@ import java.util.UUID;
  */
 
 public class TronService extends Service implements Observer {
+    private static final String LOG_TAG = "TronService";
+
     /**
      * {@link SmsReceiver} that detects received text messages and forwards them to the
      * {@link TronService}.
@@ -79,86 +82,17 @@ public class TronService extends Service implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         /** Convert newly received SMSMessage to Message **/
-        Message message = convertToMessage(o);
+        Message message = (Message) (o);
+        message.setUserToken(mUserToken);
 
         mDatabase.child(mUserToken)
                 .child(UUID.randomUUID().toString())
                 .setValue(message);
     }
 
-    private Message convertToMessage(Object o) {
-        SmsMessage smsMessage = (SmsMessage) o;
-        Message message = new Message();
-
-        message.setUserToken(mUserToken);
-        message.setFromNum(smsMessage.getOriginatingAddress());
-        message.setFromName(getContactName(this, message.getFromNum()));
-        message.setContent(smsMessage.getMessageBody());
-
-        return message;
-    }
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-
-    /**
-     * Using the given number, query the device to see if the number is saved as a contact and if so
-     * return the contact name. If not, return the original number provided.
-     *
-     * @param context {@link Context}
-     * @param number  {@link String}
-     * @return {@link String}
-     */
-    private String getContactName(Context context, String number) {
-        /** Execute the query **/
-        Cursor cursor = executeContactProviderQuery(context, number);
-
-        /** Verify Cursor aren't null **/
-        if (cursor != null) {
-            /** Get first matches name **/
-            if (cursor.moveToFirst()) {
-                /** Get column index containing contact name **/
-                int columnIndex = cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME);
-
-                /** Get name from cursor object **/
-                String name = cursor.getString(columnIndex);
-
-                /** Close cursor to avoid memory leak **/
-                cursor.close();
-
-                /** Return contact name **/
-                return name;
-            } else {
-                cursor.close();
-            }
-        }
-
-        /** Return contact number as no name was located **/
-        return number;
-    }
-
-    /**
-     * Using the provided number parameter, queries the {@link ContactsContract} object to see if
-     * the number is saved as a contact. If so, returns the {@link Cursor} that contains the query
-     * results.
-     *
-     * @param context {@link Context} Application context
-     * @param number  {@link String} Phone number to query
-     * @return {@link Cursor} containing query results
-     */
-    private Cursor executeContactProviderQuery(Context context, String number) {
-        /** Define the columns for the query to return **/
-        String[] projection = new String[]{
-                ContactsContract.PhoneLookup.DISPLAY_NAME,
-                ContactsContract.PhoneLookup._ID};
-
-        /** Encode the phone number and build the filter URI **/
-        Uri contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
-
-        /** Perform query and return results **/
-        return context.getContentResolver().query(contactUri, projection, null, null, null);
     }
 }

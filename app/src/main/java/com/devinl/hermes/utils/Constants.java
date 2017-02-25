@@ -8,11 +8,6 @@ public class Constants {
     public static final String CHAR_LIST = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01233456789/.";
 
     /**
-     * Broadcast String for receiving text messages
-     */
-    public static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
-
-    /**
      * String Array containing the various permissions necessary to run the app.
      */
     public static final String[] PERMISSIONS = {

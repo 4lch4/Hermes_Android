@@ -9,18 +9,14 @@ import android.content.SharedPreferences;
 
 public class PrefManager {
     // Shared preferences file name
-    private static final String PREF_NAME = "hermes-welcome";
+    private static final String PREF_NAME = "hermes";
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
     private static final String USER_TOKEN = "UserToken";
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
-    private Context mContext;
-    // shared mPref mode
-    private int PRIVATE_MODE = 0;
 
     public PrefManager(Context context) {
-        mContext = context;
-        mPref = mContext.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        mPref = context.getSharedPreferences(PREF_NAME, 0);
         mEditor = mPref.edit();
     }
 

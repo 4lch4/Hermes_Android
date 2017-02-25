@@ -14,6 +14,10 @@ public class Message {
     public Message() {
     }
 
+    public Message(String userToken) {
+        setUserToken(userToken);
+    }
+
     public String getUserToken() {
         return mUserToken;
     }

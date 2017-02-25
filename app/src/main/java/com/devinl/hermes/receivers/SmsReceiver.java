@@ -1,4 +1,4 @@
-package com.devinl.hermes.utils;
+package com.devinl.hermes.receivers;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -36,7 +36,7 @@ public class SmsReceiver extends BroadcastReceiver {
     private Context mContext;
 
     /**
-     * Required to avoid random Unable to instantiate receiver com.devinl.hermes.utils.SmsReceiver
+     * Required to avoid random Unable to instantiate receiver com.devinl.hermes.receivers.SmsReceiver
      * errors that occur when the receiver is moved to the background by the service.
      */
     public SmsReceiver() {

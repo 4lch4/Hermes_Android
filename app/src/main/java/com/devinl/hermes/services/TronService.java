@@ -1,21 +1,15 @@
 package com.devinl.hermes.services;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.IBinder;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.telephony.SmsMessage;
-import android.util.Log;
 
 import com.devinl.hermes.models.Message;
 import com.devinl.hermes.models.ObservableObject;
 import com.devinl.hermes.utils.PrefManager;
-import com.devinl.hermes.utils.SmsReceiver;
+import com.devinl.hermes.receivers.SmsReceiver;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 

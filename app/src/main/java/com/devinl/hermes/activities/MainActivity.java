@@ -2,6 +2,7 @@ package com.devinl.hermes.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
 
@@ -9,6 +10,7 @@ import com.devinl.hermes.R;
 import com.devinl.hermes.SetupActivity;
 import com.devinl.hermes.services.TronService;
 import com.devinl.hermes.utils.PrefManager;
+import com.digits.sdk.android.Digits;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.MaterialIcons;
 
@@ -16,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity {
+
     @BindView(R.id.primaryBtn) Button mPrimaryBtn;
 
     @Override

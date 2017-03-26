@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/slide_2_title"
         android:layout_centerHorizontal="true"
-        android:text="@string/onboarding_slide_2_desc"
+        android:text="@string/onboarding_slide_2_desc_1"
         android:textColor="@android:color/white"
         android:textSize="@dimen/slide_desc_lg"/>
 

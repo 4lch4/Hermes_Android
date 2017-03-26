@@ -1,16 +1,12 @@
 package com.devinl.hermes.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -18,45 +14,53 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.devinl.hermes.R;
+import com.devinl.hermes.adapters.SectionsPagerAdapter;
 import com.devinl.hermes.utils.PrefManager;
+import com.digits.sdk.android.Digits;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
+
+import static com.devinl.hermes.utils.KeyRetriever.getTwitterKey;
+import static com.devinl.hermes.utils.KeyRetriever.getTwitterSecret;
 
 public class OnboardingActivity extends BaseActivity {
     private static final String LOG_TAG = "OnboardingActivity";
     @BindView(R.id.layoutDots) LinearLayout mDotsLayout;
     @BindView(R.id.container) ViewPager mViewPager;
     @BindView(R.id.btn_next) Button mBtnNext;
+    @BindView(R.id.btn_back) Button mBtnBack;
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private PrefManager mPrefManager;
     private TextView[] mDots;
     private int[] mLayouts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Checking for first time launch - before calling setContentView()
-        mPrefManager = new PrefManager(this);
-
         setContentView(R.layout.activity_onboarding);
+
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(getTwitterKey(this), getTwitterSecret(this));
+        Fabric.with(this, new TwitterCore(authConfig), new Digits.Builder().build());
 
         // Initialize ButterKnife
         ButterKnife.bind(this);
-
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter();
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.addOnPageChangeListener(getOnPageChangeListener());
 
         mLayouts = new int[]{
                 R.layout.onboarding_slide_1,
                 R.layout.onboarding_slide_2,
                 R.layout.onboarding_slide_3
         };
+
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(this, mLayouts);
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(getOnPageChangeListener());
 
         addBottomDots(0);
 
@@ -88,7 +92,7 @@ public class OnboardingActivity extends BaseActivity {
     }
 
     private void launchMainActivity() {
-        mPrefManager.setFirstTimeLaunch(false);
+        new PrefManager(this).setFirstTimeLaunch(false);
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
@@ -122,15 +126,15 @@ public class OnboardingActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 addBottomDots(position);
-
-                // changing the next button text 'NEXT' / 'GOT IT'
-                if (position == mLayouts.length - 1) {
-                    // last page. make button text to GOT IT
-                    mBtnNext.setText(getString(R.string.onboarding_finish));
-                } else {
-                    // still pages are left
+                if (position == 0) {
+                    mBtnBack.setVisibility(View.GONE);
                     mBtnNext.setText(getString(R.string.onboarding_next_slide));
-                }
+                }else if (position == mLayouts.length - 1)
+                    mBtnNext.setText(getString(R.string.onboarding_finish));
+                else if (position > 0)
+                    mBtnBack.setVisibility(View.VISIBLE);
+                else
+                    mBtnNext.setText(getString(R.string.onboarding_next_slide));
             }
 
             @Override
@@ -145,49 +149,5 @@ public class OnboardingActivity extends BaseActivity {
         };
     }
 
-    public class SectionsPagerAdapter extends PagerAdapter {
-        private LayoutInflater layoutInflater;
 
-        SectionsPagerAdapter() {
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = layoutInflater.inflate(mLayouts[position], container, false);
-            container.addView(view);
-
-            return view;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            View view = (View) object;
-            container.removeView(view);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return getResources().getString(R.string.onboarding_slide_1_title);
-                case 1:
-                    return getResources().getString(R.string.onboarding_slide_2_title);
-                case 2:
-                    return getResources().getString(R.string.onboarding_slide_3_title);
-            }
-            return null;
-        }
-    }
 }

@@ -11,3 +11,7 @@
 /gradle/
 
 app/google-services\.json
+
+app/fabric\.properties
+
+*.key

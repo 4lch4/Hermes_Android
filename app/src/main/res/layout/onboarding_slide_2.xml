@@ -1,63 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/blurple"
-                android:orientation="vertical"
-                android:padding="10dp">
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Theme.AppCompat.NoActionBar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blurple"
+    android:orientation="vertical"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="81dp">
 
     <TextView
         android:id="@+id/slide_2_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dots_margin_bottom"
-        android:layout_marginTop="@dimen/dots_margin_bottom"
+        android:layout_margin="8dp"
         android:text="@string/onboarding_slide_2_title"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/slide_title"
-        android:textStyle="bold"/>
+        android:textAppearance="@android:style/TextAppearance.Material.DialogWindowTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/slide_2_desc"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/slide_2_title"
-        android:layout_centerHorizontal="true"
-        android:text="@string/onboarding_slide_2_desc"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/slide_desc"/>
+        android:layout_margin="8dp"
+        android:text="@string/onboarding_slide_2_desc_1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/slide_2_title" />
 
-    <ImageView
-        android:id="@+id/img_initiate_success"
+    <com.digits.sdk.android.DigitsAuthButton
+        android:id="@+id/auth_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/slide_2_desc"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
-        android:contentDescription="@string/successful_initiation"
-        android:src="@drawable/initiate_success"/>
+        android:layout_height="48dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/slide_2_desc"
+        android:layout_marginTop="8dp"
+        app:layout_constraintHorizontal_bias="0.506" />
 
     <TextView
-        android:id="@+id/slide_2_desc_2"
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@id/slide_2_desc"
-        android:layout_below="@id/img_initiate_success"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/onboarding_slide_2_desc_2"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/slide_desc_lg"/>
+        android:visibility="gone"
+        android:textAppearance="@android:style/TextAppearance.Material.DialogWindowTitle"
 
-    <ImageView
-        android:id="@+id/img_initiate_failure"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/slide_2_desc_2"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
-        android:contentDescription="@string/unsuccessful_initiation"
-        android:src="@drawable/initiate_failure"/>
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/auth_button" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

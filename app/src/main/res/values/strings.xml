@@ -11,9 +11,9 @@
 
     <string name="onboarding_slide_1_title">Welcome!</string>
     <string name="onboarding_slide_1_desc">
-        There\'s only two things we need to cover in order to get started: \n
-        \n1) How to link your device with Tron (the online bot who sends you your messages).
-        \n2) How to read/reply to messages.
+        There\'s a couple things we need to cover before the app will be ready for use: \n
+        \n1) Link your device to Hermes, the Discord bot that you send messages through.
+        \n2) How to use Hermes to read/reply to your messages.
     </string>
 
     <string name="onboarding_slide_2_title">Initial Setup</string>

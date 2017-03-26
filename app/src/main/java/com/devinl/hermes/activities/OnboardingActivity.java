@@ -28,7 +28,6 @@ public class OnboardingActivity extends BaseActivity {
     @BindView(R.id.layoutDots) LinearLayout mDotsLayout;
     @BindView(R.id.container) ViewPager mViewPager;
     @BindView(R.id.btn_next) Button mBtnNext;
-    @BindView(R.id.btn_skip) Button mBtnSkip;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private PrefManager mPrefManager;
     private TextView[] mDots;
@@ -42,7 +41,7 @@ public class OnboardingActivity extends BaseActivity {
 
         setContentView(R.layout.activity_onboarding);
 
-        /** Initialize ButterKnife **/
+        // Initialize ButterKnife
         ButterKnife.bind(this);
 
         // Create the adapter that will return a fragment for each of the three
@@ -62,13 +61,6 @@ public class OnboardingActivity extends BaseActivity {
         addBottomDots(0);
 
         changeStatusBarColor();
-
-        mBtnSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchMainActivity();
-            }
-        });
 
         mBtnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,11 +127,9 @@ public class OnboardingActivity extends BaseActivity {
                 if (position == mLayouts.length - 1) {
                     // last page. make button text to GOT IT
                     mBtnNext.setText(getString(R.string.onboarding_finish));
-                    mBtnSkip.setVisibility(View.GONE);
                 } else {
                     // still pages are left
                     mBtnNext.setText(getString(R.string.onboarding_next_slide));
-                    mBtnSkip.setVisibility(View.VISIBLE);
                 }
             }
 

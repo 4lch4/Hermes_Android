@@ -29,4 +29,13 @@
         <item name="rd_backgroundColor">@color/blurple</item>
     </style>
 
+    <style name="ActionBarThemeOverlay" parent="">
+        <item name="colorControlHighlight">@color/darkNotBlack</item>
+        <item name="android:textColor">@color/fullWhite</item>
+        <item name="android:textColorPrimary">@color/fullWhite</item>
+        <item name="android:actionMenuTextColor">@color/fullWhite</item>
+        <item name="android:textColorSecondary">@color/fullWhite</item>
+        <item name="android:background">@color/notQuiteBlack</item>
+    </style>
+
 </resources>

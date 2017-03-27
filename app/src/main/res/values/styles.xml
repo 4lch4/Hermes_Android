@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/blurple</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/greyple</item>
+        <item name="colorPrimary">@color/darkNotBlack</item>
+        <item name="colorPrimaryDark">@color/notQuiteBlack</item>
+        <item name="colorAccent">@color/blurple</item>
         <item name="android:textColor">@color/fullWhite</item>
     </style>
 
@@ -20,13 +20,11 @@
 
     <style name="RippleButtonStyle" parent="Material.Drawable.Ripple.Touch">
         <item name="android:background">@drawable/btn_generate_token</item>
-        <item name="rd_rippleColor">@color/colorPrimaryDark</item>
+        <item name="rd_rippleColor">@color/darkBlurple</item>
         <item name="rd_leftPadding">1dp</item>
         <item name="rd_topPadding">1dp</item>
         <item name="rd_rightPadding">1dp</item>
         <item name="rd_bottomPadding">2dp</item>
-        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Button</item>
-        <item name="android:textColor">@color/fullWhite</item>
         <item name="rd_cornerRadius">4dp</item>
         <item name="rd_backgroundColor">@color/blurple</item>
     </style>

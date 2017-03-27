@@ -6,9 +6,8 @@
     android:id="@+id/onboarding_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blurple"
-    android:fitsSystemWindows="true"
-    tools:context="com.devinl.hermes.activities.OnboardingActivity">
+    android:background="@color/darkNotBlack"
+    android:fitsSystemWindows="true">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/container"

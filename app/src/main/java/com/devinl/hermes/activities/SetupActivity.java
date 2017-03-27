@@ -1,4 +1,4 @@
-package com.devinl.hermes;
+package com.devinl.hermes.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.devinl.hermes.R;
 import com.devinl.hermes.activities.MainActivity;
 import com.devinl.hermes.utils.PrefManager;
 

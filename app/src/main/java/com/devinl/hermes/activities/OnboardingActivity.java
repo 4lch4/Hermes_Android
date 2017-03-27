@@ -6,17 +6,23 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.devinl.hermes.R;
 import com.devinl.hermes.adapters.SectionsPagerAdapter;
 import com.devinl.hermes.utils.PrefManager;
+import com.digits.sdk.android.AuthCallback;
 import com.digits.sdk.android.Digits;
+import com.digits.sdk.android.DigitsAuthButton;
+import com.digits.sdk.android.DigitsException;
+import com.digits.sdk.android.DigitsSession;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 
@@ -24,8 +30,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
-import static com.devinl.hermes.utils.KeyRetriever.getTwitterKey;
-import static com.devinl.hermes.utils.KeyRetriever.getTwitterSecret;
+import static com.devinl.hermes.utils.KeyUtility.generateUserToken;
+import static com.devinl.hermes.utils.KeyUtility.getTwitterKey;
+import static com.devinl.hermes.utils.KeyUtility.getTwitterSecret;
 
 public class OnboardingActivity extends BaseActivity {
     private static final String LOG_TAG = "OnboardingActivity";
@@ -34,6 +41,12 @@ public class OnboardingActivity extends BaseActivity {
     @BindView(R.id.btn_next) Button mBtnNext;
     @BindView(R.id.btn_back) Button mBtnBack;
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private DigitsAuthButton mAuthButton;
+    private TextView mCommandTemplate;
+    private TextView mCommandDescription;
+    private boolean mAuthorized;
+    private TextView mAuthDescription;
+    private String mPhoneNumber;
     private TextView[] mDots;
     private int[] mLayouts;
 
@@ -41,6 +54,8 @@ public class OnboardingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
+
+        // TODO: Lock vertical orientation until I can fix the rotation crash
 
         TwitterAuthConfig authConfig = new TwitterAuthConfig(getTwitterKey(this), getTwitterSecret(this));
         Fabric.with(this, new TwitterCore(authConfig), new Digits.Builder().build());
@@ -65,6 +80,13 @@ public class OnboardingActivity extends BaseActivity {
         addBottomDots(0);
 
         changeStatusBarColor();
+        mBtnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int curr = getItem(-1);
+                mViewPager.setCurrentItem(curr);
+            }
+        });
 
         mBtnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,15 +148,22 @@ public class OnboardingActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 addBottomDots(position);
-                if (position == 0) {
-                    mBtnBack.setVisibility(View.GONE);
-                    mBtnNext.setText(getString(R.string.onboarding_next_slide));
-                }else if (position == mLayouts.length - 1)
-                    mBtnNext.setText(getString(R.string.onboarding_finish));
-                else if (position > 0)
+
+                if(position > 0)
                     mBtnBack.setVisibility(View.VISIBLE);
                 else
-                    mBtnNext.setText(getString(R.string.onboarding_next_slide));
+                    mBtnBack.setVisibility(View.GONE);
+
+                if (position == 1) {
+                    mAuthDescription = (TextView) mViewPager.findViewById(R.id.auth_description);
+                    mAuthButton = (DigitsAuthButton) mViewPager.findViewById(R.id.auth_button);
+                    mAuthButton.setBackground(getResources().getDrawable(R.drawable.btn_use_phone_number, null));
+                    mAuthButton.setCallback(getAuthButtonCallback());
+
+                    mCommandDescription = (TextView) mViewPager.findViewById(R.id.command_description);
+                    mCommandTemplate = (TextView) mViewPager.findViewById(R.id.command_template);
+                    mCommandTemplate.setText("h!initiate " + generateUserToken());
+                }
             }
 
             @Override
@@ -149,5 +178,41 @@ public class OnboardingActivity extends BaseActivity {
         };
     }
 
+    /**
+     * Begins the second step of the user authorization process.
+     */
+    private void initializeSecondAuthStep() {
+        mAuthButton.setEnabled(false);
+        mAuthButton.animate().alpha(0f).setDuration(1000).start();
+        mAuthDescription.animate().alpha(0f).setDuration(1000).start();
+        mCommandTemplate.animate().alpha(1f).setDuration(1000).start();
+        mCommandDescription.animate().alpha(1f).setDuration(1000).start();
+        mViewPager.findViewById(R.id.command_initiate_success).animate().alpha(1f).setDuration(1000).start();
+        mViewPager.findViewById(R.id.command_failure_description).animate().alpha(1f).setDuration(1000).start();
+        mViewPager.findViewById(R.id.command_initiate_failure).animate().alpha(1f).setDuration(1000).start();
+    }
 
+    /**
+     * Build and return the {@link AuthCallback} necessary for retrieving the authentication status
+     * of the users phone number. If it's successful, begin the next step, if not, alert user.
+     *
+     * @return AuthCallback
+     */
+    private AuthCallback getAuthButtonCallback() {
+        return new AuthCallback() {
+            @Override
+            public void success(DigitsSession session, String phoneNumber) {
+                mAuthorized = true;
+                mPhoneNumber = phoneNumber;
+
+                initializeSecondAuthStep();
+            }
+
+            @Override
+            public void failure(DigitsException exception) {
+                Toast.makeText(OnboardingActivity.this, "Unfortunately, authentication was unsuccessful. Please contact the developer.", Toast.LENGTH_SHORT).show();
+                Log.e("Digits", "Sign in with Digits failure", exception);
+            }
+        };
+    }
 }

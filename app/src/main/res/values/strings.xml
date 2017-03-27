@@ -21,8 +21,19 @@
         First things first, we need to authenticate your phone number. Do this by clicking the
         button below.
     </string>
-    <string name="onboarding_slide_2_desc_2">
-        h!initiate abcdefghij
+    <string name="onboarding_slide_2_command_template">
+        h!connect abcdefghij
+    </string>
+    <string name="onboarding_slide_2_command_description">
+        Next, we need to connect your device to Hermes. To do this, send the message exactly as
+        you see it above. This is the command for a new user along with your uniquely generated user
+        token.\n\n
+
+        If it works, you\'ll see a success message like so:
+    </string>
+    <string name="onboarding_slide_2_command_failure">
+        If it is not successful, you\'ll receive a message like so with a description of what
+        went wrong:
     </string>
 
     <string name="onboarding_slide_3_title">Slide 3 title</string>

@@ -32,11 +32,10 @@
         If it works, you\'ll see a success message like so:
     </string>
     <string name="onboarding_slide_2_command_failure">
-        If it is not successful, you\'ll receive a message like so with a description of what
-        went wrong:
+        If not, you\'ll see a message like so with a description of what went wrong:
     </string>
 
-    <string name="onboarding_slide_3_title">Slide 3 title</string>
+    <string name="onboarding_slide_3_title">Send/Receive Messages</string>
     <string name="onboarding_slide_3_desc">Slide 3 description</string>
     <string name="dd_logo_desc">Discord Direct logo</string>
     <string name="unsuccessful_initiation">Unsuccessful initiation.</string>
@@ -49,4 +48,7 @@
     <string name="btn_generate_token">Generate New Token</string>
     <string name="btn_complete_setup">Complete</string>
     <string name="onboarding_btn_back">BACK</string>
+    <string name="send_message_template">h!send This is a mere test message :D</string>
+    <string name="send_message_description">As long as you\'ve synced your device and Discord account with Hermes, sending the above message will get you a success message like so:</string>
+    <string name="send_message_success">Send message success.</string>
 </resources>

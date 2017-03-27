@@ -55,7 +55,7 @@ public class BaseActivity extends AppCompatActivity {
     protected Toolbar activateToolbar(String title, boolean backDisabled) {
         if (backDisabled) {
             if (mToolbar == null) {
-                mToolbar = (Toolbar) findViewById(R.id.app_bar);
+               // mToolbar = (Toolbar) findViewById(R.id.app_bar);
                 if (mToolbar != null) {
                     mToolbar.setTitle(title);
                     setSupportActionBar(mToolbar);

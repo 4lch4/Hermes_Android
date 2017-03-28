@@ -7,7 +7,7 @@ sends a message to Hermes, it's sent to this app and then to the correct user.
 - Receive messages from Firebase instance
 - Send messages to correct recipient based on Firebase data
 
-## Dependencies
+## Dependencies (as of 3/27/17)
 - com.github.rey5137:material:1.2.4
 - com.android.support:appcompat-v7:25.3.0
 - com.joanzapata.iconify:android-iconify-material:2.2.2

@@ -71,8 +71,12 @@ public class KeyUtility {
             int num = getRandomNum();
             char ch = CHAR_LIST.charAt(num);
 
+            // Test to see if the char is a forward or backward slash. If so, don't add it and
+            // remove 1 from i to ensure at least 10 characters are added to the string.
             if (ch != '/' && ch != '\\')
                 builder.append(ch);
+            else
+                i--;
         }
 
         return builder.toString();

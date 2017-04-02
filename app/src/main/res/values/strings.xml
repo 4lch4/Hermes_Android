@@ -25,9 +25,9 @@
         h!connect abcdefghij
     </string>
     <string name="onboarding_slide_2_command_description">
-        Next, we need to connect your device to Hermes. To do this, send the message exactly as
-        you see it above. This is the command for a new user along with your uniquely generated user
-        token.\n\n
+        Next, we need to sync your device with Hermes. To do this, send the message exactly as
+        you see it above. This is the command to synchronize your device to your uniquely generated
+        user token.\n\n
 
         If it works, you\'ll see a success message like so:
     </string>

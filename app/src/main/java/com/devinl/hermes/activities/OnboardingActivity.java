@@ -221,20 +221,7 @@ public class OnboardingActivity extends BaseActivity {
             public void success(DigitsSession session, String phoneNumber) {
                 DatabaseReference myDatabase = FirebaseDatabase.getInstance().getReference("users");
                 myDatabase.child(mUserToken).child("phoneNum").setValue(phoneNumber);
-                myDatabase.child(mUserToken).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.child("username").exists()) {
-                            mBtnNext.performClick();
-                            Toast.makeText(OnboardingActivity.this, "Synchronize successful, moving on to the next step!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                myDatabase.child(mUserToken).addValueEventListener(getSyncListener());
 
                 initializeSecondAuthStep();
             }
@@ -243,6 +230,29 @@ public class OnboardingActivity extends BaseActivity {
             public void failure(DigitsException exception) {
                 Toast.makeText(OnboardingActivity.this, "Unfortunately, authentication was unsuccessful. Please contact the developer.", Toast.LENGTH_SHORT).show();
                 Log.e("Digits", "Sign in with Digits failure", exception);
+            }
+        };
+    }
+
+    /**
+     * Build the {@link ValueEventListener} responsible for flipping the page to the next slide when
+     * the user successfully synchronizes their Discord account with the database.
+     *
+     * @return {@link ValueEventListener}
+     */
+    public ValueEventListener getSyncListener() {
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child("username").exists()) {
+                    mBtnNext.performClick();
+                    Toast.makeText(OnboardingActivity.this, "Synchronize successful, moving on to the next step!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         };
     }

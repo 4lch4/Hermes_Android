@@ -24,7 +24,7 @@ import com.devinl.hermes.models.ObservableObject;
 /**
  * Created by Alcha on 1/28/2017.
  * The {@link BroadcastReceiver} responsible for forwarding sent and received text messages. If the
- * device receives a text message, it's forwarded to the appropriate instance of Tron and then sent
+ * device receives a text message, it's forwarded to the appropriate instance of Hermes and then sent
  * to the correct user.
  */
 public class SmsReceiver extends BroadcastReceiver {

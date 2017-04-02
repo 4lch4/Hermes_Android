@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.devinl.hermes.R;
-import com.devinl.hermes.services.TronService;
+import com.devinl.hermes.services.HermesService;
 import com.devinl.hermes.utils.PrefManager;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.MaterialIcons;
@@ -42,11 +42,11 @@ public class MainActivity extends BaseActivity {
 
     /**
      * Initializes the controls used by the Activity, such as the mStartButton and mPauseButton.
-     * Also detects if the {@link TronService} is currently running and hides the mStartButton if
+     * Also detects if the {@link HermesService} is currently running and hides the mStartButton if
      * so.
      */
     private void initializeControls() {
-        if (isTronServiceOn()) {
+        if (isHermesServiceOn()) {
             mPrimaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_pause_circle_outline));
             mPrimaryBtn.setOnClickListener(getPauseButtonListener());
         } else {
@@ -65,8 +65,8 @@ public class MainActivity extends BaseActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isTronServiceOn())
-                    startService(new Intent(MainActivity.this, TronService.class));
+                if (!isHermesServiceOn())
+                    startService(new Intent(MainActivity.this, HermesService.class));
 
                 initializeControls();
             }
@@ -84,8 +84,8 @@ public class MainActivity extends BaseActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isTronServiceOn())
-                    stopService(new Intent(MainActivity.this, TronService.class));
+                if (isHermesServiceOn())
+                    stopService(new Intent(MainActivity.this, HermesService.class));
 
                 initializeControls();
             }

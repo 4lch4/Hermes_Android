@@ -7,8 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.devinl.hermes.R;
-import com.devinl.hermes.services.TronService;
+import com.devinl.hermes.services.HermesService;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialModule;
 
@@ -28,16 +27,16 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Check to see if {@link TronService} is currently running and return a boolean indicating the
+     * Check to see if {@link HermesService} is currently running and return a boolean indicating the
      * answer.
      *
      * @return {@link Boolean}
      */
-    protected boolean isTronServiceOn() {
+    protected boolean isHermesServiceOn() {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (TronService.class.getName().equals(service.service.getClassName())) {
+            if (HermesService.class.getName().equals(service.service.getClassName())) {
                 return true;
             }
         }

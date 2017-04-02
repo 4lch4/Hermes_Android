@@ -19,7 +19,7 @@ public class Constants {
     };
 
     /**
-     * Server IP where Tron is hosted.
+     * Server IP where Hermes is hosted.
      */
     public static final String SERVER_IP = "198.199.117.243";
 

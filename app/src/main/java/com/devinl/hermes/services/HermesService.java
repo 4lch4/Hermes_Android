@@ -23,23 +23,23 @@ import java.util.UUID;
  * {@link Service} responsible for handling the network communication that is performed by Discord
  * Direct. For example, if a user receives a text message on their device, the {@link SmsReceiver}
  * updates an {@link ObservableObject} with the message received so that this service can forward
- * the message to the Tron server. If the user sends a message to a contact, it is sent to this
+ * the message to the Hermes server. If the user sends a message to a contact, it is sent to this
  * class and forwarded to the correct number.
  * </p>
  */
 
-public class TronService extends Service implements Observer {
-    private static final String LOG_TAG = "TronService";
+public class HermesService extends Service implements Observer {
+    private static final String LOG_TAG = "HermesService";
 
     /**
      * {@link SmsReceiver} that detects received text messages and forwards them to the
-     * {@link TronService}.
+     * {@link HermesService}.
      */
     SmsReceiver mSmsReceiver;
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("messages");
     private String mUserToken;
 
-    public TronService() {
+    public HermesService() {
     }
 
     @Override

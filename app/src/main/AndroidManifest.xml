@@ -37,7 +37,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".services.TronService" />
+        <service android:name=".services.HermesService" />
 
         <receiver android:name=".services.BootBroadcastReceiver">
             <intent-filter>

@@ -24,6 +24,9 @@ import com.digits.sdk.android.Digits;
 import com.digits.sdk.android.DigitsAuthButton;
 import com.digits.sdk.android.DigitsException;
 import com.digits.sdk.android.DigitsSession;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 
@@ -47,7 +50,7 @@ public class OnboardingActivity extends BaseActivity {
     private TextView mCommandTemplate;
     private TextView mCommandDescription;
     private TextView mAuthDescription;
-    private String mPhoneNumber;
+    private String mUserToken;
     private TextView[] mDots;
     private int[] mLayouts;
 
@@ -57,6 +60,8 @@ public class OnboardingActivity extends BaseActivity {
         setContentView(R.layout.activity_onboarding);
 
         // TODO: Lock vertical orientation until I can fix the rotation crash
+
+        FirebaseApp.initializeApp(this);
 
         TwitterAuthConfig authConfig = new TwitterAuthConfig(getTwitterKey(this), getTwitterSecret(this));
         Fabric.with(this, new TwitterCore(authConfig), new Digits.Builder().build());
@@ -156,6 +161,8 @@ public class OnboardingActivity extends BaseActivity {
                     mBtnBack.setVisibility(View.GONE);
 
                 if (position == 1) {
+                    mUserToken = generateUserToken();
+
                     mAuthDescription = (TextView) mViewPager.findViewById(R.id.auth_description);
                     mAuthButton = (DigitsAuthButton) mViewPager.findViewById(R.id.auth_button);
                     mAuthButton.setBackground(getResources().getDrawable(R.drawable.btn_use_phone_number, null));
@@ -163,7 +170,7 @@ public class OnboardingActivity extends BaseActivity {
 
                     mCommandDescription = (TextView) mViewPager.findViewById(R.id.command_description);
                     mCommandTemplate = (TextView) mViewPager.findViewById(R.id.command_template);
-                    mCommandTemplate.setText("h!initiate " + generateUserToken());
+                    mCommandTemplate.setText("h!initiate " + mUserToken);
                 }
             }
 
@@ -205,7 +212,8 @@ public class OnboardingActivity extends BaseActivity {
         return new AuthCallback() {
             @Override
             public void success(DigitsSession session, String phoneNumber) {
-                mPhoneNumber = phoneNumber;
+                DatabaseReference myDatabase = FirebaseDatabase.getInstance().getReference("users");
+                myDatabase.child(mUserToken).child("phoneNum").setValue(phoneNumber);
 
                 initializeSecondAuthStep();
             }

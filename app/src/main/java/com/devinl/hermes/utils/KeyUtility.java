@@ -70,7 +70,9 @@ public class KeyUtility {
         for (int i = 0; i < stringLen; i++) {
             int num = getRandomNum();
             char ch = CHAR_LIST.charAt(num);
-            builder.append(ch);
+
+            if (ch != '/' && ch != '\\')
+                builder.append(ch);
         }
 
         return builder.toString();

@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -129,7 +131,8 @@ public class SmsReceiver extends BroadcastReceiver {
         return new Notification.Builder(mContext.getApplicationContext())
                 .setContentTitle("SMS Logger Running")
                 .setContentText("Status: Logging..")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_hermes)
+                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_notification_bar))
                 .build();
     }
 

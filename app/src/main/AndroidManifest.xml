@@ -45,7 +45,6 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activities.SetupActivity" />
     </application>
 
 </manifest>

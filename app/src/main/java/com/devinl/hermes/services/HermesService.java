@@ -8,8 +8,9 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.devinl.hermes.models.Message;
 import com.devinl.hermes.models.ObservableObject;
-import com.devinl.hermes.utils.PrefManager;
+import com.devinl.hermes.models.User;
 import com.devinl.hermes.receivers.SmsReceiver;
+import com.devinl.hermes.utils.PrefManager;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -30,14 +31,15 @@ import java.util.UUID;
 
 public class HermesService extends Service implements Observer {
     private static final String LOG_TAG = "HermesService";
+    private User mUser;
+
+    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("messages");
 
     /**
      * {@link SmsReceiver} that detects received text messages and forwards them to the
      * {@link HermesService}.
      */
     SmsReceiver mSmsReceiver;
-    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("messages");
-    private String mUserToken;
 
     public HermesService() {
     }
@@ -47,9 +49,9 @@ public class HermesService extends Service implements Observer {
         super.onCreate();
         ObservableObject.getInstance().addObserver(this);
 
-        mUserToken = new PrefManager(this).getUserToken();
+        mUser = new PrefManager(this).getUser();
 
-        /** Initiate SmsReceiver using application context **/
+        // Initiate SmsReceiver using application context
         mSmsReceiver = new SmsReceiver(getApplicationContext());
     }
 
@@ -57,29 +59,30 @@ public class HermesService extends Service implements Observer {
     public void onDestroy() {
         super.onDestroy();
 
-        /** Disable BroadcastReceiver **/
+        // Disable BroadcastReceiver
         mSmsReceiver.disableBroadcastReceiver();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        /** Enable BroadcastReceiver **/
+        // Enable BroadcastReceiver
         mSmsReceiver.enableBroadcastReceiver();
 
-        /** Indicate WakefulIntent has been completed **/
+        // Indicate WakefulIntent has been completed
         WakefulBroadcastReceiver.completeWakefulIntent(intent);
 
-        /** Return START_STICKY to ensure service stays running **/
+        // Return START_STICKY to ensure service stays running
         return START_STICKY;
     }
 
     @Override
     public void update(Observable observable, Object o) {
-        /** Convert newly received SMSMessage to Message **/
+        // Convert newly received SMSMessage to Message
         Message message = (Message) (o);
-        message.setUserToken(mUserToken);
 
-        mDatabase.child(mUserToken)
+        message.setUserToken(mUser.getUserToken());
+
+        mDatabase.child(mUser.getUserToken())
                 .child(UUID.randomUUID().toString())
                 .setValue(message);
     }

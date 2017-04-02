@@ -15,28 +15,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity {
-
     @BindView(R.id.primaryBtn) Button mPrimaryBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PrefManager prefManager = new PrefManager(this);
-
-        if (prefManager.isFirstTimeLaunch()) {
+        if (new PrefManager(this).isFirstTimeLaunch()) {
             startActivity(new Intent(this, OnboardingActivity.class));
-            finish();
-        } else if (prefManager.isConfigNeeded()) {
-            startActivity(new Intent(this, SetupActivity.class));
             finish();
         }
 
         setContentView(R.layout.activity_main);
 
-        /** Initialize ButterKnife **/
+        // Initialize ButterKnife
         ButterKnife.bind(this);
 
-        /** Initialize view controls and service **/
+        // Initialize view controls and service
         initializeControls();
     }
 
@@ -72,7 +66,6 @@ public class MainActivity extends BaseActivity {
             }
         };
     }
-
 
     /**
      * Build and return the {@link android.view.View.OnClickListener} for the mPauseButton that

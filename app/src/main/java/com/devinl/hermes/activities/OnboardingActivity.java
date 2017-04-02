@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.util.Log;
@@ -25,8 +24,11 @@ import com.digits.sdk.android.DigitsAuthButton;
 import com.digits.sdk.android.DigitsException;
 import com.digits.sdk.android.DigitsSession;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 
@@ -61,6 +63,14 @@ public class OnboardingActivity extends BaseActivity {
 
         // TODO: Lock vertical orientation until I can fix the rotation crash
 
+        initializeControls();
+
+        addBottomDots(0);
+
+        changeStatusBarColor();
+    }
+
+    private void initializeControls() {
         FirebaseApp.initializeApp(this);
 
         TwitterAuthConfig authConfig = new TwitterAuthConfig(getTwitterKey(this), getTwitterSecret(this));
@@ -75,17 +85,6 @@ public class OnboardingActivity extends BaseActivity {
                 R.layout.onboarding_slide_3
         };
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(this, mLayouts);
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.addOnPageChangeListener(getOnPageChangeListener());
-
-        addBottomDots(0);
-
-        changeStatusBarColor();
         mBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,6 +104,14 @@ public class OnboardingActivity extends BaseActivity {
                 }
             }
         });
+
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(this, mLayouts);
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(getOnPageChangeListener());
     }
 
     /**
@@ -214,6 +221,18 @@ public class OnboardingActivity extends BaseActivity {
             public void success(DigitsSession session, String phoneNumber) {
                 DatabaseReference myDatabase = FirebaseDatabase.getInstance().getReference("users");
                 myDatabase.child(mUserToken).child("phoneNum").setValue(phoneNumber);
+                myDatabase.child(mUserToken).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.child("username").exists())
+                            mBtnNext.performClick();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
                 initializeSecondAuthStep();
             }

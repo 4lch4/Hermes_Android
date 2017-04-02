@@ -224,8 +224,10 @@ public class OnboardingActivity extends BaseActivity {
                 myDatabase.child(mUserToken).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.child("username").exists())
+                        if (dataSnapshot.child("username").exists()) {
                             mBtnNext.performClick();
+                            Toast.makeText(OnboardingActivity.this, "Synchronize successful, moving on to the next step!", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override

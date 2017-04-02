@@ -12,8 +12,9 @@
     <string name="onboarding_slide_1_title">Welcome!</string>
     <string name="onboarding_slide_1_desc">
         There\'s a couple things we need to cover before the app will be ready for use: \n
-        \n1) Link your device to Hermes, the Discord bot that you send messages through.
-        \n2) How to use Hermes to read/reply to your messages.
+        \n1) Initialize your account with the necessary information.
+        \n2) Sync your device to your newly created account and Hermes.
+        \n3) Begin sending and receiving messages through Hermes.
     </string>
 
     <string name="onboarding_slide_2_title">User Authentication</string>

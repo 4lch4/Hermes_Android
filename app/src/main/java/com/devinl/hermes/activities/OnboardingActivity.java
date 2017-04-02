@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.util.Log;
@@ -40,11 +41,11 @@ public class OnboardingActivity extends BaseActivity {
     @BindView(R.id.container) ViewPager mViewPager;
     @BindView(R.id.btn_next) Button mBtnNext;
     @BindView(R.id.btn_back) Button mBtnBack;
+    private static final int ANIMATION_DURATION = 1000;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private DigitsAuthButton mAuthButton;
     private TextView mCommandTemplate;
     private TextView mCommandDescription;
-    private boolean mAuthorized;
     private TextView mAuthDescription;
     private String mPhoneNumber;
     private TextView[] mDots;
@@ -149,7 +150,7 @@ public class OnboardingActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 addBottomDots(position);
 
-                if(position > 0)
+                if (position > 0)
                     mBtnBack.setVisibility(View.VISIBLE);
                 else
                     mBtnBack.setVisibility(View.GONE);
@@ -183,13 +184,15 @@ public class OnboardingActivity extends BaseActivity {
      */
     private void initializeSecondAuthStep() {
         mAuthButton.setEnabled(false);
-        mAuthButton.animate().alpha(0f).setDuration(1000).start();
-        mAuthDescription.animate().alpha(0f).setDuration(1000).start();
-        mCommandTemplate.animate().alpha(1f).setDuration(1000).start();
-        mCommandDescription.animate().alpha(1f).setDuration(1000).start();
-        mViewPager.findViewById(R.id.command_initiate_success).animate().alpha(1f).setDuration(1000).start();
-        mViewPager.findViewById(R.id.command_failure_description).animate().alpha(1f).setDuration(1000).start();
-        mViewPager.findViewById(R.id.command_initiate_failure).animate().alpha(1f).setDuration(1000).start();
+        mAuthButton.animate().alpha(0f).setDuration(ANIMATION_DURATION).start();
+        mAuthDescription.animate().alpha(0f).setDuration(ANIMATION_DURATION).start();
+        mCommandTemplate.animate().alpha(1f).setDuration(ANIMATION_DURATION).start();
+        mCommandDescription.animate().alpha(1f).setDuration(ANIMATION_DURATION).start();
+
+        mViewPager.findViewById(R.id.slide_2_title).animate().alpha(0f).setDuration(ANIMATION_DURATION).start();
+        mViewPager.findViewById(R.id.command_initiate_success).animate().alpha(1f).setDuration(ANIMATION_DURATION).start();
+        mViewPager.findViewById(R.id.command_failure_description).animate().alpha(1f).setDuration(ANIMATION_DURATION).start();
+        mViewPager.findViewById(R.id.command_initiate_failure).animate().alpha(1f).setDuration(ANIMATION_DURATION).start();
     }
 
     /**
@@ -202,7 +205,6 @@ public class OnboardingActivity extends BaseActivity {
         return new AuthCallback() {
             @Override
             public void success(DigitsSession session, String phoneNumber) {
-                mAuthorized = true;
                 mPhoneNumber = phoneNumber;
 
                 initializeSecondAuthStep();

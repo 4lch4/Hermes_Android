@@ -17,10 +17,9 @@
         \n3) Begin sending and receiving messages through Hermes.
     </string>
 
-    <string name="onboarding_slide_2_title">User Authentication</string>
+    <string name="onboarding_slide_2_title">User Setup</string>
     <string name="onboarding_slide_2_desc_1">
-        First things first, we need to authenticate your phone number. Do this by clicking the
-        button below.
+        First things first, we need to authenticate your phone number:
     </string>
     <string name="onboarding_slide_2_command_template">
         h!connect abcdefghij

@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.devinl.hermes.R;
 import com.devinl.hermes.adapters.SectionsPagerAdapter;
+import com.devinl.hermes.models.User;
 import com.devinl.hermes.utils.PrefManager;
 import com.digits.sdk.android.AuthCallback;
 import com.digits.sdk.android.Digits;
@@ -259,7 +260,9 @@ public class OnboardingActivity extends BaseActivity {
                     mSynchronized = true;
 
                     // Store user token to PreferenceManager
-                    new PrefManager(OnboardingActivity.this).setUserToken(dataSnapshot.getKey());
+                    User user = buildUserObject(dataSnapshot);
+
+                    new PrefManager(OnboardingActivity.this).setUser(user);
 
                     // Alert user they can go on
                     Toast.makeText(OnboardingActivity.this, "Synchronize successful, you may move on to the next step!", Toast.LENGTH_LONG).show();
@@ -271,5 +274,15 @@ public class OnboardingActivity extends BaseActivity {
 
             }
         };
+    }
+
+    private User buildUserObject(DataSnapshot dataSnapshot) {
+        User user = new User();
+        user.setUsername(dataSnapshot.child("username").getValue().toString());
+        user.setChannelId(Long.parseLong(dataSnapshot.child("channelId").getValue().toString()));
+        user.setPhoneNum(dataSnapshot.child("phoneNum").getValue().toString());
+        user.setUserId(Long.parseLong(dataSnapshot.child("userId").getValue().toString()));
+        user.setUserToken(dataSnapshot.getKey());
+        return user;
     }
 }

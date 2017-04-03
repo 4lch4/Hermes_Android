@@ -179,7 +179,7 @@ public class HermesService extends Service implements Observer {
         message.setContent(content);
         message.setToNum(msgTo);
         message.setFromName("");
-        message.setFromNum("");
+        message.setFromNum(mUser.getPhoneNum());
 
         return message;
     }

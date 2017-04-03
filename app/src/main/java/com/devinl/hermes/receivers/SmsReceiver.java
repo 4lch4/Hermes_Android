@@ -2,6 +2,7 @@ package com.devinl.hermes.receivers;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -18,9 +19,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.devinl.hermes.R;
+import com.devinl.hermes.activities.MainActivity;
 import com.devinl.hermes.models.Message;
 import com.devinl.hermes.models.ObservableObject;
-import com.devinl.hermes.utils.PrefManager;
 
 
 /**
@@ -42,7 +43,6 @@ public class SmsReceiver extends BroadcastReceiver {
      * errors that occur when the receiver is moved to the background by the service.
      */
     public SmsReceiver() {
-
     }
 
     public SmsReceiver(Context context) {
@@ -132,8 +132,27 @@ public class SmsReceiver extends BroadcastReceiver {
                 .setContentTitle("SMS Logger Running")
                 .setContentText("Status: Logging..")
                 .setSmallIcon(R.drawable.ic_hermes)
+                .setContentIntent(buildNotificationIntent())
                 .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_notification_bar))
                 .build();
+    }
+
+    /**
+     * Build and return the {@link PendingIntent} that will launch the {@link MainActivity} if the
+     * user happens to click on the notification that shows the SMSLogger is running. This enables
+     * them to quickly disable it.
+     *
+     * TODO: Add a "disable" button to the notification to it'll just stop from right there.
+     *
+     * @return {@link PendingIntent}
+     */
+    private PendingIntent buildNotificationIntent() {
+        return PendingIntent.getActivity(
+                mContext,
+                0,
+                new Intent(mContext, MainActivity.class),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
     }
 
     /**
@@ -146,30 +165,30 @@ public class SmsReceiver extends BroadcastReceiver {
      * @return {@link String}
      */
     private String getContactName(Context context, String number) {
-        /** Execute the query **/
+        // Execute the query
         Cursor cursor = executeContactProviderQuery(context, number);
 
-        /** Verify Cursor aren't null **/
+        // Verify Cursor aren't null
         if (cursor != null) {
-            /** Get first matches name **/
+            // Get first matches name
             if (cursor.moveToFirst()) {
-                /** Get column index containing contact name **/
+                // Get column index containing contact name
                 int columnIndex = cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME);
 
-                /** Get name from cursor object **/
+                // Get name from cursor object
                 String name = cursor.getString(columnIndex);
 
-                /** Close cursor to avoid memory leak **/
+                // Close cursor to avoid memory leak
                 cursor.close();
 
-                /** Return contact name **/
+                // Return contact name
                 return name;
             } else {
                 cursor.close();
             }
         }
 
-        /** Return contact number as no name was located **/
+        // Return contact number as no name was located
         return number;
     }
 
@@ -184,15 +203,15 @@ public class SmsReceiver extends BroadcastReceiver {
      * @return {@link Cursor} containing query results
      */
     private Cursor executeContactProviderQuery(Context context, String number) {
-        /** Define the columns for the query to return **/
+        // Define the columns for the query to return
         String[] projection = new String[]{
                 ContactsContract.PhoneLookup.DISPLAY_NAME,
                 ContactsContract.PhoneLookup._ID};
 
-        /** Encode the phone number and build the filter URI **/
+        // Encode the phone number and build the filter URI
         Uri contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
 
-        /** Perform query and return results **/
+        // Perform query and return results
         return context.getContentResolver().query(contactUri, projection, null, null, null);
     }
 }

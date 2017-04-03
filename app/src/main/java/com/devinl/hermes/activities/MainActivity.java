@@ -2,6 +2,7 @@ package com.devinl.hermes.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -29,6 +30,8 @@ public class MainActivity extends BaseActivity {
             finish();
         }
 
+        System.out.println("UserToken = " + new PrefManager(this).getUserToken());
+
         setContentView(R.layout.activity_main);
 
         // Initialize ButterKnife
@@ -47,10 +50,10 @@ public class MainActivity extends BaseActivity {
      */
     private void initializeControls() {
         if (isHermesServiceOn()) {
-            mPrimaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_pause_circle_outline));
+            mPrimaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_pause_circle_outline).color(Color.WHITE));
             mPrimaryBtn.setOnClickListener(getPauseButtonListener());
         } else {
-            mPrimaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_play_circle_outline));
+            mPrimaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_play_circle_outline).color(Color.WHITE));
             mPrimaryBtn.setOnClickListener(getStartButtonListener());
         }
     }

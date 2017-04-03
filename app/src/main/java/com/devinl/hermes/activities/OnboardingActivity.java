@@ -256,7 +256,7 @@ public class OnboardingActivity extends BaseActivity {
                     mSynchronized = true;
 
                     // Store user token to PreferenceManager
-                    new PrefManager(OnboardingActivity.this).setUserToken(dataSnapshot.getValue().toString());
+                    new PrefManager(OnboardingActivity.this).setUserToken(dataSnapshot.getKey());
 
                     // Alert user they can go on
                     Toast.makeText(OnboardingActivity.this, "Synchronize successful, you may move on to the next step!", Toast.LENGTH_LONG).show();

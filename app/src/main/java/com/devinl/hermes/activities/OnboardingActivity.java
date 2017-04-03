@@ -177,7 +177,7 @@ public class OnboardingActivity extends BaseActivity {
 
                     mCommandDescription = (TextView) mViewPager.findViewById(R.id.command_description);
                     mCommandTemplate = (TextView) mViewPager.findViewById(R.id.command_template);
-                    mCommandTemplate.setText("h!initiate " + mUserToken);
+                    mCommandTemplate.append(" " + mUserToken);
                 }
             }
 

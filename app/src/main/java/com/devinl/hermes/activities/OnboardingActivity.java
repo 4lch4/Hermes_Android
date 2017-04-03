@@ -169,7 +169,7 @@ public class OnboardingActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 addBottomDots(position);
 
-                if(position == 2 && !mSynchronized) {
+                if (position == 2 && !mSynchronized) {
                     mBtnBack.callOnClick();
                     Toast.makeText(OnboardingActivity.this, "Please synchronize your Discord account first.", Toast.LENGTH_SHORT).show();
                     return;
@@ -230,9 +230,9 @@ public class OnboardingActivity extends BaseActivity {
         return new AuthCallback() {
             @Override
             public void success(DigitsSession session, String phoneNumber) {
-                DatabaseReference myDatabase = FirebaseDatabase.getInstance().getReference("users");
-                myDatabase.child(mUserToken).child("phoneNum").setValue(phoneNumber);
-                myDatabase.child(mUserToken).addValueEventListener(getSyncListener());
+                DatabaseReference userDb = FirebaseDatabase.getInstance().getReference("users");
+                userDb.child(mUserToken).child("phoneNum").setValue(phoneNumber);
+                userDb.child(mUserToken).addValueEventListener(getSyncListener());
 
                 initializeSecondAuthStep();
             }
@@ -264,6 +264,9 @@ public class OnboardingActivity extends BaseActivity {
 
                     new PrefManager(OnboardingActivity.this).setUser(user);
 
+                    // Setup the "index" for going from user id to user token
+                    setIntermediateValue(user);
+
                     // Alert user they can go on
                     Toast.makeText(OnboardingActivity.this, "Synchronize successful, you may move on to the next step!", Toast.LENGTH_LONG).show();
                 }
@@ -274,6 +277,11 @@ public class OnboardingActivity extends BaseActivity {
 
             }
         };
+    }
+
+    private void setIntermediateValue(User user) {
+        DatabaseReference intermediateDb = FirebaseDatabase.getInstance().getReference("intermediate");
+        intermediateDb.child(String.valueOf(user.getUserId())).setValue(user.getUserToken());
     }
 
     private User buildUserObject(DataSnapshot dataSnapshot) {

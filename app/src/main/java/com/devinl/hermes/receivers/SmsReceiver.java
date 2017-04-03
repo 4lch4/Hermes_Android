@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,7 +29,7 @@ import com.devinl.hermes.models.ObservableObject;
  * to the correct user.
  */
 public class SmsReceiver extends BroadcastReceiver {
-    static final int NOTIFICATION = 81237;
+    static final int NOTIFICATION = 69;
     private static final String LOG_TAG = "SmsReceiver";
     private NotificationManager mNotificationManager;
     private PackageManager mPackageManager;
@@ -38,7 +37,7 @@ public class SmsReceiver extends BroadcastReceiver {
     private Context mContext;
 
     /**
-     * Required to avoid random Unable to instantiate receiver com.devinl.hermes.receivers.SmsReceiver
+     * Required to avoid random "Unable to instantiate receiver com.devinl.hermes.receivers.SmsReceiver"
      * errors that occur when the receiver is moved to the background by the service.
      */
     public SmsReceiver() {
@@ -142,6 +141,7 @@ public class SmsReceiver extends BroadcastReceiver {
      *
      * @param context {@link Context}
      * @param number  {@link String}
+     *
      * @return {@link String}
      */
     private String getContactName(Context context, String number) {
@@ -179,6 +179,7 @@ public class SmsReceiver extends BroadcastReceiver {
      *
      * @param context {@link Context} Application context
      * @param number  {@link String} Phone number to query
+     *
      * @return {@link Cursor} containing query results
      */
     private Cursor executeContactProviderQuery(Context context, String number) {

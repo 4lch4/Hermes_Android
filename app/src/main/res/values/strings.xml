@@ -14,7 +14,7 @@
         There\'s a couple things we need to cover before the app will be ready for use: \n
         \n1) Initialize your account with the necessary information.
         \n2) Sync your device to your newly created account and Hermes.
-        \n3) Begin sending and receiving messages through Hermes.
+        \n3) Begin sending and receiving messages.
     </string>
 
     <string name="onboarding_slide_2_title">User Setup</string>

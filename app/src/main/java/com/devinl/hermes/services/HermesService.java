@@ -52,7 +52,7 @@ public class HermesService extends Service implements Observer {
         mUser = new PrefManager(this).getUser();
 
         // Initiate SmsReceiver using application context
-        mSmsReceiver = new SmsReceiver(getApplicationContext());
+        mSmsReceiver = new SmsReceiver(this);
     }
 
     @Override

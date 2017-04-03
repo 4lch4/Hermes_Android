@@ -60,4 +60,13 @@ public class PrefManager {
 
         mEditor.commit();
     }
+
+    public void setUserToken(String token) {
+        mEditor.putString(USER_TOKEN, token);
+        mEditor.commit();
+    }
+
+    public String getUserToken() {
+        return mPref.getString(USER_TOKEN, "");
+    }
 }

@@ -48,6 +48,7 @@ public class OnboardingActivity extends BaseActivity {
     @BindView(R.id.btn_back) Button mBtnBack;
     private static final int ANIMATION_DURATION = 1000;
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private boolean mSynchronized = false;
     private DigitsAuthButton mAuthButton;
     private TextView mCommandTemplate;
     private TextView mCommandDescription;
@@ -78,6 +79,8 @@ public class OnboardingActivity extends BaseActivity {
 
         // Initialize ButterKnife
         ButterKnife.bind(this);
+
+        mUserToken = generateUserToken();
 
         mLayouts = new int[]{
                 R.layout.onboarding_slide_1,
@@ -162,14 +165,17 @@ public class OnboardingActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 addBottomDots(position);
 
+                if(position == 2 && !mSynchronized) {
+                    mBtnBack.callOnClick();
+                    Toast.makeText(OnboardingActivity.this, "Please synchronize your Discord account first.", Toast.LENGTH_SHORT).show();
+                }
+
                 if (position > 0)
                     mBtnBack.setVisibility(View.VISIBLE);
                 else
                     mBtnBack.setVisibility(View.GONE);
 
                 if (position == 1) {
-                    mUserToken = generateUserToken();
-
                     mAuthDescription = (TextView) mViewPager.findViewById(R.id.auth_description);
                     mAuthButton = (DigitsAuthButton) mViewPager.findViewById(R.id.auth_button);
                     mAuthButton.setBackground(getResources().getDrawable(R.drawable.btn_use_phone_number, null));
@@ -177,7 +183,7 @@ public class OnboardingActivity extends BaseActivity {
 
                     mCommandDescription = (TextView) mViewPager.findViewById(R.id.command_description);
                     mCommandTemplate = (TextView) mViewPager.findViewById(R.id.command_template);
-                    mCommandTemplate.append(" " + mUserToken);
+                    mCommandTemplate.setText("h!sync " + mUserToken);
                 }
             }
 
@@ -245,8 +251,14 @@ public class OnboardingActivity extends BaseActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child("username").exists()) {
-                    mBtnNext.performClick();
-                    Toast.makeText(OnboardingActivity.this, "Synchronize successful, moving on to the next step!", Toast.LENGTH_SHORT).show();
+                    // Indicate user is synchronized
+                    mSynchronized = true;
+
+                    // Store user token to PreferenceManager
+                    new PrefManager(OnboardingActivity.this).setUserToken(dataSnapshot.getValue().toString());
+
+                    // Alert user they can go on
+                    Toast.makeText(OnboardingActivity.this, "Synchronize successful, you may move on to the next step!", Toast.LENGTH_LONG).show();
                 }
             }
 

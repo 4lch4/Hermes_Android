@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.devinl.hermes.R;
 import com.devinl.hermes.models.Message;
 import com.devinl.hermes.models.ObservableObject;
+import com.devinl.hermes.utils.PrefManager;
 
 
 /**

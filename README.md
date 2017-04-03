@@ -5,8 +5,10 @@ to Hermes and then sent to the correct user. If the user sends a message to Herm
 this app and then to the correct user.
 
 ## TODO
-- Receive messages from Firebase instance
-- Send messages to correct recipient based on Firebase data
+[x] Receive messages from Firebase instance
+[x] Send messages to correct recipient based on Firebase data
+[ ] Finish 3rd slide of onboarding
+[ ] Create navigation drawer
 
 ## Dependencies (as of 3/27/17)
 - com.github.rey5137:material:1.2.4

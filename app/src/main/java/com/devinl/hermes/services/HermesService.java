@@ -1,8 +1,11 @@
 package com.devinl.hermes.services;
 
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.IBinder;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.telephony.SmsManager;
@@ -21,6 +24,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.UUID;
+
+import static android.provider.ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE;
 
 /**
  * Created by Alcha on 1/29/2017.
@@ -95,9 +100,7 @@ public class HermesService extends Service implements Observer {
         // Convert newly received SMSMessage to Message
         Message message = (Message) (o);
 
-        mMessagesIn.child(mUser.getUserToken())
-                .child(UUID.randomUUID().toString())
-                .setValue(message);
+        mMessagesIn.child(UUID.randomUUID().toString()).setValue(message);
     }
 
     @Nullable
@@ -185,7 +188,9 @@ public class HermesService extends Service implements Observer {
      * Convert the toField in the provided {@link DataSnapshot} and return it as a {@link String}.
      * This is primarily for when a user provides a contact name instead of a direct number. This
      * method will find the contact and the mobile number associated with it if it exists.
-     * @param msgTo
+     *
+     * @param msgTo {@link DataSnapshot} containing msgTo info
+     *
      * @return
      */
     private String convertToField(DataSnapshot msgTo) {
@@ -193,6 +198,39 @@ public class HermesService extends Service implements Observer {
         if (Character.isDigit(toField.charAt(0)))
             return toField;
         else
-            return "";
+            return getCNumber(toField);
+    }
+
+    /**
+     * Largely constructed with the help of
+     * <a href="http://www.geeks.gallery/how-to-get-contact-number-from-contactlist-in-android/">
+     * this article</a>.<br/<br/>
+     *
+     * Using the name provided, searches the users contacts for a mobile phone number associated
+     * with it and returns that. If none are found, it returns a blank String.
+     *
+     * @param nameIn Name of contact to search for
+     *
+     * @return contact mobile number or blank String if none found
+     */
+    public String getCNumber(String nameIn) {
+        ContentResolver cr = this.getContentResolver();
+        Cursor phones = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+        String phoneNumber, name;
+        int numberType;
+
+        if (phones != null) {
+            while (phones.moveToNext()) {
+                name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                numberType = phones.getInt(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
+
+                if (name.equals(nameIn) && numberType == TYPE_MOBILE)
+                    return phoneNumber;
+            }
+            phones.close();
+        }
+
+        return "";
     }
 }

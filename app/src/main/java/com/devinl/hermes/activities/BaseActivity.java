@@ -49,12 +49,13 @@ public class BaseActivity extends AppCompatActivity {
      *
      * @param title        Title that you wish to be displayed in the toolbar.
      * @param backDisabled If you don't want a back button in the left corner, this should be true.
+     *
      * @return Returns the Toolbar for use within the activity.
      */
     protected Toolbar activateToolbar(String title, boolean backDisabled) {
         if (backDisabled) {
             if (mToolbar == null) {
-               // mToolbar = (Toolbar) findViewById(R.id.app_bar);
+                // mToolbar = (Toolbar) findViewById(R.id.app_bar);
                 if (mToolbar != null) {
                     mToolbar.setTitle(title);
                     setSupportActionBar(mToolbar);

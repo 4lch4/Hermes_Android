@@ -1,6 +1,8 @@
 package com.devinl.hermes.activities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +15,8 @@ import com.joanzapata.iconify.fonts.MaterialIcons;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.devinl.hermes.utils.Constants.PERMISSIONS;
 
 public class MainActivity extends BaseActivity {
     @BindView(R.id.primaryBtn) Button mPrimaryBtn;
@@ -32,6 +36,8 @@ public class MainActivity extends BaseActivity {
 
         // Initialize view controls and service
         initializeControls();
+
+        checkPermissions();
     }
 
     /**
@@ -83,5 +89,25 @@ public class MainActivity extends BaseActivity {
                 initializeControls();
             }
         };
+    }
+
+    /**
+     * If the device is using Android >= 23 and the app doesn't have the necessary permissions
+     * granted, this method will query the device and ask the user for permission.
+     * <p>
+     * TODO: Account for a user not wanting to give permission for contacts
+     */
+    private void checkPermissions() {
+        boolean check = false;
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            for (String permission : PERMISSIONS) {
+                if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED)
+                    check = true;
+            }
+
+            if (check)
+                requestPermissions(PERMISSIONS, 0);
+        }
     }
 }

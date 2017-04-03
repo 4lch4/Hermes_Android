@@ -30,8 +30,6 @@ public class MainActivity extends BaseActivity {
             finish();
         }
 
-        System.out.println("UserToken = " + new PrefManager(this).getUserToken());
-
         setContentView(R.layout.activity_main);
 
         // Initialize ButterKnife

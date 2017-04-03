@@ -1,6 +1,7 @@
 package com.devinl.hermes.activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -62,7 +63,8 @@ public class OnboardingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
 
-        // TODO: Lock vertical orientation until I can fix the rotation crash
+        // Lock screen in portrait until I can fix the rotation crash
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         initializeControls();
 
@@ -130,6 +132,7 @@ public class OnboardingActivity extends BaseActivity {
     }
 
     private void launchMainActivity() {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         new PrefManager(this).setFirstTimeLaunch(false);
         startActivity(new Intent(this, MainActivity.class));
         finish();

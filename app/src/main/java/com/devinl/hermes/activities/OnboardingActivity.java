@@ -168,6 +168,7 @@ public class OnboardingActivity extends BaseActivity {
                 if(position == 2 && !mSynchronized) {
                     mBtnBack.callOnClick();
                     Toast.makeText(OnboardingActivity.this, "Please synchronize your Discord account first.", Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 if (position > 0)

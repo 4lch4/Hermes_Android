@@ -44,6 +44,6 @@
     <string name="btn_complete_setup">Complete</string>
     <string name="onboarding_btn_back">BACK</string>
     <string name="send_message_template">h!send This is a mere test message :D</string>
-    <string name="send_message_description">As long as you\'ve synced your device and Discord account with Hermes, sending the above message will get you a success message like so:</string>
+    <string name="send_message_description">As long as you\'ve synced your device and Discord account with Hermes, you can send messages to specific numbers or contact names:</string>
     <string name="send_message_success">Send message success.</string>
 </resources>

@@ -1,15 +1,12 @@
 package com.devinl.hermes.receivers;
 
 import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -18,8 +15,6 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.devinl.hermes.R;
-import com.devinl.hermes.activities.MainActivity;
 import com.devinl.hermes.models.Message;
 import com.devinl.hermes.models.ObservableObject;
 
@@ -33,7 +28,6 @@ import com.devinl.hermes.models.ObservableObject;
 public class SmsReceiver extends BroadcastReceiver {
     static final int NOTIFICATION = 69;
     private static final String LOG_TAG = "SmsReceiver";
-    private NotificationManager mNotificationManager;
     private PackageManager mPackageManager;
     private ComponentName mReceiver;
     private Context mContext;
@@ -47,7 +41,6 @@ public class SmsReceiver extends BroadcastReceiver {
 
     public SmsReceiver(Context context) {
         mContext = context;
-        mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mReceiver = new ComponentName(context, SmsReceiver.class);
         mPackageManager = context.getPackageManager();
     }
@@ -97,14 +90,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP);
 
-        Toast.makeText(mContext, "Enabled logging", Toast.LENGTH_SHORT).show();
-
-        //Let us also show a notification
-        Notification notification = buildNotification();
-
-        notification.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-
-        mNotificationManager.notify(NOTIFICATION, notification);
+        Toast.makeText(mContext, "Forwarding enabled", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -116,43 +102,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                 PackageManager.DONT_KILL_APP);
 
-        Toast.makeText(mContext, "Disabled logging", Toast.LENGTH_SHORT).show();
-
-        mNotificationManager.cancel(NOTIFICATION);
-    }
-
-    /**
-     * Builds the {@link Notification} that is displayed in the notification bar to indicate that
-     * the SMS {@link BroadcastReceiver} is enabled.
-     *
-     * @return {@link Notification}
-     */
-    public Notification buildNotification() {
-        return new Notification.Builder(mContext.getApplicationContext())
-                .setContentTitle("SMS Logger Running")
-                .setContentText("Status: Logging..")
-                .setSmallIcon(R.drawable.ic_hermes)
-                .setContentIntent(buildNotificationIntent())
-                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_notification_bar))
-                .build();
-    }
-
-    /**
-     * Build and return the {@link PendingIntent} that will launch the {@link MainActivity} if the
-     * user happens to click on the notification that shows the SMSLogger is running. This enables
-     * them to quickly disable it.
-     *
-     * TODO: Add a "disable" button to the notification to it'll just stop from right there.
-     *
-     * @return {@link PendingIntent}
-     */
-    private PendingIntent buildNotificationIntent() {
-        return PendingIntent.getActivity(
-                mContext,
-                0,
-                new Intent(mContext, MainActivity.class),
-                PendingIntent.FLAG_UPDATE_CURRENT
-        );
+        Toast.makeText(mContext, "Forwarding disabled", Toast.LENGTH_SHORT).show();
     }
 
     /**

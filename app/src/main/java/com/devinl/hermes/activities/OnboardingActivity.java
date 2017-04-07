@@ -38,7 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
-import static com.devinl.hermes.utils.KeyUtility.generateUserToken;
+import static com.devinl.hermes.utils.KeyUtility.generateToken;
 import static com.devinl.hermes.utils.KeyUtility.getTwitterKey;
 import static com.devinl.hermes.utils.KeyUtility.getTwitterSecret;
 import static com.devinl.hermes.utils.KeyUtility.updateUser;
@@ -91,7 +91,7 @@ public class OnboardingActivity extends BaseActivity {
     private void initializeControls() {
         mPref = new PrefManager(this);
 
-        mUserToken = generateUserToken();
+        mUserToken = generateToken(10);
         mPref.setUserToken(mUserToken);
 
         mLayouts = new int[]{

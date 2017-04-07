@@ -15,17 +15,15 @@ import com.devinl.hermes.models.ObservableObject;
 import com.devinl.hermes.models.User;
 import com.devinl.hermes.receivers.SmsReceiver;
 import com.devinl.hermes.utils.PrefManager;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.UUID;
 
 import static android.provider.ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE;
+import static com.devinl.hermes.utils.KeyUtility.generateToken;
 
 /**
  * Created by Alcha on 1/29/2017.
@@ -41,8 +39,6 @@ import static android.provider.ContactsContract.CommonDataKinds.Phone.TYPE_MOBIL
 public class HermesService extends Service implements Observer {
     private static final String LOG_TAG = "HermesService";
     private SmsManager mSmsManager;
-    DatabaseReference mMessagesOut;
-    DatabaseReference mMessagesIn;
     private User mUser;
 
     /**
@@ -66,13 +62,6 @@ public class HermesService extends Service implements Observer {
 
         // Initialize the SmsManager for sending text messages
         mSmsManager = SmsManager.getDefault();
-
-        // Initialize Firebase references
-        mMessagesOut = FirebaseDatabase.getInstance().getReference("messagesOut/" + mUser.getUserToken());
-        mMessagesIn = FirebaseDatabase.getInstance().getReference("messagesIn/" + mUser.getUserToken());
-
-        // Add event listener for MessagesOut
-        mMessagesOut.addChildEventListener(getMessageOutListener());
     }
 
     @Override
@@ -100,88 +89,18 @@ public class HermesService extends Service implements Observer {
         // Convert newly received SMSMessage to Message
         Message message = (Message) (o);
 
-        mMessagesIn.child(UUID.randomUUID().toString()).setValue(message);
+        FirebaseMessaging fm = FirebaseMessaging.getInstance();
+        fm.send(new RemoteMessage.Builder("157475292197@gcm.googleapis.com")
+                .setMessageId(generateToken(25))
+                .addData("message_from", message.getFromName())
+                .addData("message_content", message.getContent())
+                .build());
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-
-    public ChildEventListener getMessageOutListener() {
-        return new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Message message = convertSnapshotToMessage(dataSnapshot);
-
-                // Send the message to intended person
-                sendTextMessage(message);
-
-                // Delete it so it doesn't get sent again on reboot
-                mMessagesOut.child(dataSnapshot.getKey()).removeValue();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-    }
-
-    /**
-     * Send the provided {@link Message} object to the intended recipient over SMS. The only two
-     * fields required in the {@link Message} are the toNum and content.
-     *
-     * @param message Contains the content you wish to send
-     */
-    private void sendTextMessage(Message message) {
-        // Temporary until I can convert contact names into phone numbers
-        if (message.getToNum().length() > 0) {
-            mSmsManager.sendTextMessage(
-                    message.getToNum(),
-                    message.getFromNum(),
-                    message.getContent(),
-                    null,
-                    null);
-        }
-    }
-
-    /**
-     * Convert the provided {@link DataSnapshot} into a {@link Message} and returns it. This is done
-     * by pulling the msgTo and content children from the snapshot and storing them in the new
-     * object.
-     *
-     * @param dataSnapshot Contains to field and message content
-     *
-     * @return Message object
-     */
-    private Message convertSnapshotToMessage(DataSnapshot dataSnapshot) {
-        String msgTo = convertToField(dataSnapshot.child("msgTo"));
-        String content = dataSnapshot.child("content").getValue().toString();
-
-        Message message = new Message();
-        message.setContent(content);
-        message.setToNum(msgTo);
-        message.setFromName("");
-        message.setFromNum(mUser.getPhoneNum());
-
-        return message;
     }
 
     /**
@@ -193,12 +112,11 @@ public class HermesService extends Service implements Observer {
      *
      * @return
      */
-    private String convertToField(DataSnapshot msgTo) {
-        String toField = msgTo.getValue().toString();
-        if (Character.isDigit(toField.charAt(0)))
-            return toField;
+    private String convertToField(String msgTo) {
+        if (Character.isDigit(msgTo.charAt(0)))
+            return msgTo;
         else
-            return getCNumber(toField);
+            return getCNumber(msgTo);
     }
 
     /**

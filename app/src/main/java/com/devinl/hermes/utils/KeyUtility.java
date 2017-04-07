@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.devinl.hermes.R;
-import com.devinl.hermes.activities.MainActivity;
 import com.devinl.hermes.models.User;
 
 import java.io.BufferedReader;
@@ -63,14 +62,15 @@ public class KeyUtility {
     }
 
     /**
-     * Generate a {@link String} that represents a user token and return it. The token is 10
-     * characters long and consists of the characters <code>a-z, A-Z, 0-9, and .</code>
+     * Using the provided integer, generate a token using the <code>CHAR_LIST</code> constant, and
+     * return it as a String.
+     *
+     * @param stringLen int representing length desired
      *
      * @return String
      */
-    public static String generateUserToken() {
+    public static String generateToken(int stringLen) {
         StringBuilder builder = new StringBuilder();
-        final int stringLen = 10;
 
         for (int i = 0; i < stringLen; i++) {
             int num = getRandomNum();

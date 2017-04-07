@@ -4,7 +4,6 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.telephony.SmsManager;
-import android.util.Log;
 
 import com.devinl.hermes.models.Message;
 import com.google.firebase.database.DataSnapshot;
@@ -36,7 +35,7 @@ public class FCMService extends FirebaseMessagingService {
 
             message.setToNum(msgTo);
             message.setContent(content);
-            
+
             sendTextMessage(message);
         }
     }

@@ -3,23 +3,11 @@ package com.devinl.hermes.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.devinl.hermes.R;
-import com.digits.sdk.android.AuthCallback;
-import com.digits.sdk.android.DigitsAuthButton;
-import com.digits.sdk.android.DigitsException;
-import com.digits.sdk.android.DigitsSession;
-
-import static com.devinl.hermes.utils.KeyUtility.generateUserToken;
 
 /**
  * Created by Alcha on 3/25/2017.

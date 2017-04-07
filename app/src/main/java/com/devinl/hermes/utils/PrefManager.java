@@ -18,6 +18,7 @@ public class PrefManager {
     private static final String USER_PHONE_NUM = "PhoneNum";
     private static final String USER_ID = "UserId";
     private static final String USERNAME = "Username";
+    private static final String FIREBASE_TOKEN = "FirebaseToken";
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
 
@@ -68,5 +69,14 @@ public class PrefManager {
 
     public String getUserToken() {
         return mPref.getString(USER_TOKEN, "");
+    }
+
+    void setFirebaseToken(String token) {
+        mEditor.putString(FIREBASE_TOKEN, token);
+        mEditor.commit();
+    }
+
+    public String getDeviceToken() {
+        return mPref.getString(FIREBASE_TOKEN, "");
     }
 }

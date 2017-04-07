@@ -5,6 +5,7 @@ package com.devinl.hermes.models;
  */
 
 public class User {
+    private String mDeviceToken;
     private String mUserToken;
     private String mUsername;
     private String mPhoneNum;
@@ -72,5 +73,13 @@ public class User {
 
     public long getUserId() {
         return mUserId;
+    }
+
+    public String getDeviceToken() {
+        return mDeviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        mDeviceToken = deviceToken;
     }
 }

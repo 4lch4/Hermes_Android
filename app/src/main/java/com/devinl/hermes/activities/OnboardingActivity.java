@@ -41,6 +41,7 @@ import io.fabric.sdk.android.Fabric;
 import static com.devinl.hermes.utils.KeyUtility.generateUserToken;
 import static com.devinl.hermes.utils.KeyUtility.getTwitterKey;
 import static com.devinl.hermes.utils.KeyUtility.getTwitterSecret;
+import static com.devinl.hermes.utils.KeyUtility.updateUser;
 
 public class OnboardingActivity extends BaseActivity {
     private static final String LOG_TAG = "OnboardingActivity";
@@ -55,6 +56,7 @@ public class OnboardingActivity extends BaseActivity {
     private TextView mCommandTemplate;
     private TextView mCommandDescription;
     private TextView mAuthDescription;
+    private PrefManager mPref;
     private String mUserToken;
     private TextView[] mDots;
     private int[] mLayouts;
@@ -63,18 +65,20 @@ public class OnboardingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
+        initializeLibraries();
 
         // Lock screen in portrait until I can fix the rotation crash
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         initializeControls();
+        setControlListeners();
 
         addBottomDots(0);
 
         changeStatusBarColor();
     }
 
-    private void initializeControls() {
+    private void initializeLibraries() {
         FirebaseApp.initializeApp(this);
 
         TwitterAuthConfig authConfig = new TwitterAuthConfig(getTwitterKey(this), getTwitterSecret(this));
@@ -82,8 +86,13 @@ public class OnboardingActivity extends BaseActivity {
 
         // Initialize ButterKnife
         ButterKnife.bind(this);
+    }
+
+    private void initializeControls() {
+        mPref = new PrefManager(this);
 
         mUserToken = generateUserToken();
+        mPref.setUserToken(mUserToken);
 
         mLayouts = new int[]{
                 R.layout.onboarding_slide_1,
@@ -91,6 +100,15 @@ public class OnboardingActivity extends BaseActivity {
                 R.layout.onboarding_slide_3
         };
 
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(this, mLayouts);
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+    }
+
+    private void setControlListeners() {
         mBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,12 +129,6 @@ public class OnboardingActivity extends BaseActivity {
             }
         });
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(this, mLayouts);
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(getOnPageChangeListener());
     }
 
@@ -259,13 +271,9 @@ public class OnboardingActivity extends BaseActivity {
                     // Indicate user is synchronized
                     mSynchronized = true;
 
-                    // Store user token to PreferenceManager
                     User user = buildUserObject(dataSnapshot);
 
-                    new PrefManager(OnboardingActivity.this).setUser(user);
-
-                    // Setup the "index" for going from user id to user token
-                    setIntermediateValue(user);
+                    updateUser(user, OnboardingActivity.this);
 
                     // Alert user they can go on
                     Toast.makeText(OnboardingActivity.this, "Synchronize successful, you may move on to the next step!", Toast.LENGTH_LONG).show();
@@ -279,18 +287,21 @@ public class OnboardingActivity extends BaseActivity {
         };
     }
 
-    private void setIntermediateValue(User user) {
-        DatabaseReference intermediateDb = FirebaseDatabase.getInstance().getReference("intermediate");
-        intermediateDb.child(String.valueOf(user.getUserId())).setValue(user.getUserToken());
-    }
-
     private User buildUserObject(DataSnapshot dataSnapshot) {
         User user = new User();
+
+        user.setUserToken(dataSnapshot.getKey());
         user.setUsername(dataSnapshot.child("username").getValue().toString());
-        user.setChannelId(Long.parseLong(dataSnapshot.child("channelId").getValue().toString()));
         user.setPhoneNum(dataSnapshot.child("phoneNum").getValue().toString());
         user.setUserId(Long.parseLong(dataSnapshot.child("userId").getValue().toString()));
-        user.setUserToken(dataSnapshot.getKey());
+        user.setChannelId(Long.parseLong(dataSnapshot.child("channelId").getValue().toString()));
+
+        if (dataSnapshot.child("deviceToken").getValue() == null) {
+            if (mPref.getDeviceToken().length() > 0)
+                user.setDeviceToken(mPref.getDeviceToken());
+        } else
+            user.setDeviceToken(dataSnapshot.child("deviceToken").getValue().toString());
+
         return user;
     }
 }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.devinl.hermes.R;
+import com.devinl.hermes.activities.MainActivity;
+import com.devinl.hermes.models.User;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -19,6 +21,9 @@ import static com.devinl.hermes.utils.Constants.CHAR_LIST;
  */
 
 public class KeyUtility {
+    /** Basic log tag **/
+    private static final String LOG_TAG = "KeyUtility";
+
     public static String getTwitterKey(Context context) {
         StringBuilder results = new StringBuilder();
         final String LOG_TAG = "getTwitterKey()";
@@ -59,7 +64,7 @@ public class KeyUtility {
 
     /**
      * Generate a {@link String} that represents a user token and return it. The token is 10
-     * characters long and consists of the characters <code>a-z, A-Z, 0-9, /, and .</code>
+     * characters long and consists of the characters <code>a-z, A-Z, 0-9, and .</code>
      *
      * @return String
      */
@@ -71,12 +76,7 @@ public class KeyUtility {
             int num = getRandomNum();
             char ch = CHAR_LIST.charAt(num);
 
-            // Test to see if the char is a forward or backward slash. If so, don't add it and
-            // remove 1 from i to ensure at least 10 characters are added to the string.
-            if (ch != '/' && ch != '\\')
-                builder.append(ch);
-            else
-                i--;
+            builder.append(ch);
         }
 
         return builder.toString();
@@ -97,5 +97,25 @@ public class KeyUtility {
         } else {
             return randomInt - 1;
         }
+    }
+
+    public static void updateDeviceToken(String token, Context context) {
+        Log.d(LOG_TAG, "Updating Firebase device token - " + token);
+
+        PrefManager prefManager = new PrefManager(context);
+        DBManager dbManager = new DBManager(context);
+
+        dbManager.updateDeviceToken(token);
+        prefManager.setFirebaseToken(token);
+    }
+
+    public static void updateUser(User user, Context context) {
+        Log.d(LOG_TAG, "Updating user - " + user.getUsername());
+
+        PrefManager prefManager = new PrefManager(context);
+        DBManager dbManager = new DBManager(context);
+
+        prefManager.setUser(user);
+        dbManager.updateUser(user);
     }
 }

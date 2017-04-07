@@ -1,17 +1,19 @@
 package com.devinl.hermes.services;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.provider.ContactsContract;
+import android.telephony.SmsManager;
 import android.util.Log;
 
-import com.devinl.hermes.R;
-import com.devinl.hermes.activities.MainActivity;
+import com.devinl.hermes.models.Message;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.Map;
+
+import static android.provider.ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE;
 
 /**
  * Created by Alcha on 4/6/2017.
@@ -23,38 +25,86 @@ public class FCMService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        Log.d(LOG_TAG, "From: " + remoteMessage.getFrom());
 
-        // Check if message contains a data payload.
+        // Verify RemoteMessage contains data payload
         if (remoteMessage.getData().size() > 0) {
-            Log.d(LOG_TAG, "Message data payload: " + remoteMessage.getData());
-        }
+            Map<String, String> data = remoteMessage.getData();
+            Message message = new Message();
 
-        // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
-            Log.d(LOG_TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-        }
+            String msgTo = convertToField(data.get("toField"));
+            String content = data.get("content");
 
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
-        sendNotification(remoteMessage.getNotification().getBody());
+            message.setToNum(msgTo);
+            message.setContent(content);
+            
+            sendTextMessage(message);
+        }
     }
 
-    private void sendNotification(String body) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+    /**
+     * Convert the toField in the provided {@link DataSnapshot} and return it as a {@link String}.
+     * This is primarily for when a user provides a contact name instead of a direct number. This
+     * method will find the contact and the mobile number associated with it if it exists.
+     *
+     * @param msgTo {@link DataSnapshot} containing msgTo info
+     *
+     * @return
+     */
+    private String convertToField(String msgTo) {
+        if (Character.isDigit(msgTo.charAt(0)))
+            return msgTo;
+        else
+            return getCNumber(msgTo);
+    }
 
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_hermes)
-                .setContentTitle("Firebase Push Notification")
-                .setContentText(body)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+    /**
+     * Largely constructed with the help of
+     * <a href="http://www.geeks.gallery/how-to-get-contact-number-from-contactlist-in-android/">
+     * this article</a>.<br/<br/>
+     *
+     * Using the name provided, searches the users contacts for a mobile phone number associated
+     * with it and returns that. If none are found, it returns a blank String.
+     *
+     * @param nameIn Name of contact to search for
+     *
+     * @return contact mobile number or blank String if none found
+     */
+    public String getCNumber(String nameIn) {
+        ContentResolver cr = this.getContentResolver();
+        Cursor phones = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+        String phoneNumber, name;
+        int numberType;
 
-        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        manager.notify(0, builder.build());
+        if (phones != null) {
+            while (phones.moveToNext()) {
+                name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                numberType = phones.getInt(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
+
+                if (name.equals(nameIn) && numberType == TYPE_MOBILE)
+                    return phoneNumber;
+            }
+            phones.close();
+        }
+
+        return "";
+    }
+
+    /**
+     * Send the provided {@link Message} object to the intended recipient over SMS. The only two
+     * fields required in the {@link Message} are the toNum and content.
+     *
+     * @param message Contains the content you wish to send
+     */
+    private void sendTextMessage(Message message) {
+        // Temporary until I can convert contact names into phone numbers
+        if (message.getToNum().length() > 0) {
+            SmsManager.getDefault().sendTextMessage(
+                    message.getToNum(),
+                    message.getFromNum(),
+                    message.getContent(),
+                    null,
+                    null);
+        }
     }
 }

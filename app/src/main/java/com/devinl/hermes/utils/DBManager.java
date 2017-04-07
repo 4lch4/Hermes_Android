@@ -17,7 +17,7 @@ class DBManager {
     private static final String LOG_TAG = "DBManager";
 
     /** {@link DatabaseReference} for converting a Firebase device token into a HermesDirect token **/
-    private DatabaseReference mUserIdToDevice = FirebaseDatabase.getInstance().getReference("userIdToDevice");
+    private DatabaseReference mUserIdToToken = FirebaseDatabase.getInstance().getReference("userIdToToken");
 
     /** {@link DatabaseReference} for HermesDirect users **/
     private DatabaseReference mUsers = FirebaseDatabase.getInstance().getReference("users");
@@ -35,7 +35,7 @@ class DBManager {
 
         // Update userIdToDevice/userId
         if (user.getUserId() != 0)
-            mUserIdToDevice.child(String.valueOf(user.getUserId())).setValue(tokenIn);
+            mUserIdToToken.child(String.valueOf(user.getUserId())).setValue(tokenIn);
 
         // Update user/userToken/deviceToken
         if (user.getUserToken() != null)
@@ -47,6 +47,6 @@ class DBManager {
             mUsers.child(user.getUserToken()).setValue(user);
 
         if (user.getUserId() != 0)
-            mUserIdToDevice.child(String.valueOf(user.getUserId())).setValue(user.getDeviceToken());
+            mUserIdToToken.child(String.valueOf(user.getUserId())).setValue(user.getUserToken());
     }
 }

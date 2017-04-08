@@ -42,6 +42,7 @@ import static com.devinl.hermes.utils.KeyUtility.generateToken;
 import static com.devinl.hermes.utils.KeyUtility.getTwitterKey;
 import static com.devinl.hermes.utils.KeyUtility.getTwitterSecret;
 import static com.devinl.hermes.utils.KeyUtility.updateUser;
+import static com.devinl.hermes.utils.PrefManager.checkPermissions;
 
 public class OnboardingActivity extends BaseActivity {
     private static final String LOG_TAG = "OnboardingActivity";
@@ -268,6 +269,8 @@ public class OnboardingActivity extends BaseActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child("username").exists()) {
+                    checkPermissions(OnboardingActivity.this);
+
                     // Indicate user is synchronized
                     mSynchronized = true;
 

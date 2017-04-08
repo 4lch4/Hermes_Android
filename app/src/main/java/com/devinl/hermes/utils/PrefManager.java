@@ -1,9 +1,14 @@
 package com.devinl.hermes.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 
 import com.devinl.hermes.models.User;
+
+import static com.devinl.hermes.utils.Constants.PERMISSIONS;
 
 /**
  * Created by Alcha on 2/19/2017.
@@ -78,5 +83,25 @@ public class PrefManager {
 
     public String getDeviceToken() {
         return mPref.getString(FIREBASE_TOKEN, "");
+    }
+
+    /**
+     * If the device is using Android >= 23 and the app doesn't have the necessary permissions
+     * granted, this method will query the device and ask the user for permission.
+     * <p>
+     * TODO: Account for a user not wanting to give permission for contacts
+     */
+    public static void checkPermissions(Activity activity) {
+        boolean check = false;
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            for (String permission : PERMISSIONS) {
+                if (activity.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED)
+                    check = true;
+            }
+
+            if (check)
+                activity.requestPermissions(PERMISSIONS, 0);
+        }
     }
 }

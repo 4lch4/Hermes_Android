@@ -39,6 +39,7 @@ import static com.devinl.hermes.utils.KeyUtility.generateToken;
 public class HermesService extends Service implements Observer {
     private static final String LOG_TAG = "HermesService";
     private SmsManager mSmsManager;
+    private PrefManager mPrefs;
     private User mUser;
 
     /**
@@ -55,7 +56,9 @@ public class HermesService extends Service implements Observer {
         super.onCreate();
         ObservableObject.getInstance().addObserver(this);
 
-        mUser = new PrefManager(this).getUser();
+        mPrefs = new PrefManager(this);
+
+        mUser = mPrefs.getUser();
 
         // Initiate SmsReceiver using application context
         mSmsReceiver = new SmsReceiver(this);
@@ -92,8 +95,9 @@ public class HermesService extends Service implements Observer {
         FirebaseMessaging fm = FirebaseMessaging.getInstance();
         fm.send(new RemoteMessage.Builder("157475292197@gcm.googleapis.com")
                 .setMessageId(generateToken(25))
-                .addData("message_from", message.getFromName())
-                .addData("message_content", message.getContent())
+                .addData("messageFrom", message.getFromName())
+                .addData("messageContent", message.getContent())
+                .addData("userToken", mPrefs.getUserToken())
                 .build());
     }
 

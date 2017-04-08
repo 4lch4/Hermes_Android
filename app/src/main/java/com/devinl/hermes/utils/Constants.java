@@ -5,8 +5,11 @@ package com.devinl.hermes.utils;
  */
 
 public class Constants {
-    /** List of available characters for a HermesDirect user token **/
-    static final String CHAR_LIST = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789%$#@!=+.";
+    /**
+     * List of available characters for a HermesDirect user token
+     * Firebase Database paths must not contain '.', '#', '$', '[', or ']'
+     */
+    static final String CHAR_LIST = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789%@!=+";
 
     /**
      * String Array containing the various permissions necessary to run the app.

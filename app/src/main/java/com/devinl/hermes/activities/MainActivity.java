@@ -1,23 +1,27 @@
 package com.devinl.hermes.activities;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.crashlytics.android.Crashlytics;
 import com.devinl.hermes.R;
 import com.devinl.hermes.services.HermesService;
 import com.devinl.hermes.utils.PrefManager;
+import com.digits.sdk.android.Digits;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.MaterialIcons;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
 
-import static com.devinl.hermes.utils.Constants.PERMISSIONS;
+import static com.devinl.hermes.utils.KeyUtility.getTwitterKey;
+import static com.devinl.hermes.utils.KeyUtility.getTwitterSecret;
 import static com.devinl.hermes.utils.PrefManager.checkPermissions;
 
 public class MainActivity extends BaseActivity {
@@ -26,6 +30,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(getTwitterKey(this), getTwitterSecret(this));
+        Fabric.with(this, new Crashlytics(), new Digits.Builder().build(), new TwitterCore(authConfig));
+
         if (new PrefManager(this).isFirstTimeLaunch()) {
             startActivity(new Intent(this, OnboardingActivity.class));
             finish();

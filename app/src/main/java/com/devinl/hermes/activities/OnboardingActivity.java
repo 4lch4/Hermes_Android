@@ -21,7 +21,6 @@ import com.devinl.hermes.adapters.SectionsPagerAdapter;
 import com.devinl.hermes.models.User;
 import com.devinl.hermes.utils.PrefManager;
 import com.digits.sdk.android.AuthCallback;
-import com.digits.sdk.android.Digits;
 import com.digits.sdk.android.DigitsAuthButton;
 import com.digits.sdk.android.DigitsException;
 import com.digits.sdk.android.DigitsSession;
@@ -31,16 +30,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterCore;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 
 import static com.devinl.hermes.utils.KeyUtility.generateToken;
-import static com.devinl.hermes.utils.KeyUtility.getTwitterKey;
-import static com.devinl.hermes.utils.KeyUtility.getTwitterSecret;
 import static com.devinl.hermes.utils.KeyUtility.updateUser;
 import static com.devinl.hermes.utils.PrefManager.checkPermissions;
 
@@ -81,9 +75,6 @@ public class OnboardingActivity extends BaseActivity {
 
     private void initializeLibraries() {
         FirebaseApp.initializeApp(this);
-
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(getTwitterKey(this), getTwitterSecret(this));
-        Fabric.with(this, new TwitterCore(authConfig), new Digits.Builder().build());
 
         // Initialize ButterKnife
         ButterKnife.bind(this);

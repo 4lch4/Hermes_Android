@@ -16,7 +16,7 @@ import static com.devinl.hermes.utils.Constants.CHAR_LIST;
 /**
  * Created by Alcha on 3/26/2017.
  * Contains methods for retrieving the various keys needed to run the app. Such as the Twitter Key,
- * Twitter Secret, etc.
+ * Twitter Secret, etc. The Twitter key and secret are both required for the Digits library.
  */
 
 public class KeyUtility {

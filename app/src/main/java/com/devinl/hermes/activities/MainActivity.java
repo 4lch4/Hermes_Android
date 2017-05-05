@@ -16,8 +16,6 @@ import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
 import static com.devinl.hermes.utils.KeyUtility.getTwitterKey;
@@ -25,7 +23,6 @@ import static com.devinl.hermes.utils.KeyUtility.getTwitterSecret;
 import static com.devinl.hermes.utils.PrefManager.checkPermissions;
 
 public class MainActivity extends BaseActivity {
-    @BindView(R.id.primaryBtn) Button mPrimaryBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +37,6 @@ public class MainActivity extends BaseActivity {
 
         setContentView(R.layout.activity_main);
 
-        // Initialize ButterKnife
-        ButterKnife.bind(this);
-
         // Initialize view controls and service
         initializeControls();
 
@@ -55,12 +49,14 @@ public class MainActivity extends BaseActivity {
      * so.
      */
     private void initializeControls() {
+        Button primaryBtn = (Button) findViewById(R.id.primaryBtn);
+
         if (isHermesServiceOn()) {
-            mPrimaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_pause_circle_outline).color(Color.WHITE));
-            mPrimaryBtn.setOnClickListener(getPauseButtonListener());
+            primaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_pause_circle_outline).color(Color.WHITE));
+            primaryBtn.setOnClickListener(getPauseButtonListener());
         } else {
-            mPrimaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_play_circle_outline).color(Color.WHITE));
-            mPrimaryBtn.setOnClickListener(getStartButtonListener());
+            primaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_play_circle_outline).color(Color.WHITE));
+            primaryBtn.setOnClickListener(getStartButtonListener());
         }
     }
 

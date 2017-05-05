@@ -31,36 +31,33 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import static com.devinl.hermes.utils.KeyUtility.generateToken;
 import static com.devinl.hermes.utils.KeyUtility.updateUser;
 import static com.devinl.hermes.utils.PrefManager.checkPermissions;
 
 public class OnboardingActivity extends BaseActivity {
     private static final String LOG_TAG = "OnboardingActivity";
-    @BindView(R.id.layoutDots) LinearLayout mDotsLayout;
-    @BindView(R.id.container) ViewPager mViewPager;
-    @BindView(R.id.btn_next) Button mBtnNext;
-    @BindView(R.id.btn_back) Button mBtnBack;
     private static final int ANIMATION_DURATION = 1000;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private boolean mSynchronized = false;
     private DigitsAuthButton mAuthButton;
-    private TextView mCommandTemplate;
     private TextView mCommandDescription;
     private TextView mAuthDescription;
+    private TextView mCommandTemplate;
+    private LinearLayout mDotsLayout;
+    private ViewPager mViewPager;
     private PrefManager mPref;
     private String mUserToken;
     private TextView[] mDots;
+    private Button mBtnNext;
+    private Button mBtnBack;
     private int[] mLayouts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
-        initializeLibraries();
+        FirebaseApp.initializeApp(this);
 
         // Lock screen in portrait until I can fix the rotation crash
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -73,17 +70,15 @@ public class OnboardingActivity extends BaseActivity {
         changeStatusBarColor();
     }
 
-    private void initializeLibraries() {
-        FirebaseApp.initializeApp(this);
-
-        // Initialize ButterKnife
-        ButterKnife.bind(this);
-    }
-
     private void initializeControls() {
-        mPref = new PrefManager(this);
+        mDotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mBtnNext = (Button) findViewById(R.id.btn_next);
+        mBtnBack = (Button) findViewById(R.id.btn_back);
 
         mUserToken = generateToken(10);
+
+        mPref = new PrefManager(this);
         mPref.setUserToken(mUserToken);
 
         mLayouts = new int[]{
@@ -100,6 +95,13 @@ public class OnboardingActivity extends BaseActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
     }
 
+    /**
+     * Add the listeners to the various controls in the Activity.<br/><br/>
+     *
+     * At time of writing this, for example, I set the next and back {@link Button}'s
+     * {@link android.view.View.OnClickListener OnClickListener} as well as the {@link ViewPager}'s
+     * {@link android.support.v4.view.ViewPager.OnPageChangeListener OnPageChangeListener}.
+     */
     private void setControlListeners() {
         mBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,9 +126,7 @@ public class OnboardingActivity extends BaseActivity {
         mViewPager.addOnPageChangeListener(getOnPageChangeListener());
     }
 
-    /**
-     * Making notification bar transparent
-     */
+    /** Makes the notification bar transparent if on API 19+. */
     private void changeStatusBarColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -136,6 +136,10 @@ public class OnboardingActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Launches the {@link MainActivity} as well as sets the FirstTimeLaunch flag to false and
+     * returns the screen orientation to the device sensor.
+     */
     private void launchMainActivity() {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         new PrefManager(this).setFirstTimeLaunch(false);
@@ -143,6 +147,11 @@ public class OnboardingActivity extends BaseActivity {
         finish();
     }
 
+    /**
+     * Add the bottom dots to the bottom of the current page based on the page loaded. This ensures
+     * the correct dot is highlighted for each page loaded.
+     * @param currentPage
+     */
     private void addBottomDots(int currentPage) {
         mDots = new TextView[mLayouts.length];
 
@@ -166,6 +175,14 @@ public class OnboardingActivity extends BaseActivity {
         return mViewPager.getCurrentItem() + i;
     }
 
+    /**
+     * Build the {@link android.support.v4.view.ViewPager.OnPageChangeListener} responsible for
+     * determining which page is selected. For example, verifies the user has synchronized their
+     * account before allowing them to continue or set the authentication token in the command
+     * sample on page 2.
+     *
+     * @return {@link android.support.v4.view.ViewPager.OnPageChangeListener}
+     */
     public ViewPager.OnPageChangeListener getOnPageChangeListener() {
         return new ViewPager.OnPageChangeListener() {
 

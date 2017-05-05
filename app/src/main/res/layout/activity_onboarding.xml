@@ -2,7 +2,6 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/onboarding_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,6 +12,8 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <LinearLayout
@@ -31,9 +32,9 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:background="@null"
-        android:visibility="gone"
         android:text="@string/onboarding_btn_back"
-        android:textColor="@color/fullWhite" />
+        android:textColor="@color/fullWhite"
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"

@@ -12,8 +12,8 @@
     <string name="onboarding_slide_1_title">Welcome!</string>
     <string name="onboarding_slide_1_desc">
         There\'s a couple things we need to cover before the app will be ready for use: \n
-        \n1) Initialize your account with the necessary information.
-        \n2) Sync your device to your newly created account and Hermes.
+        \n1) Invite Hermes to your server and initialize your account.
+        \n2) Sync your device to your newly created account.
         \n3) Begin sending and receiving messages.
     </string>
 
@@ -46,4 +46,6 @@
     <string name="send_message_template">h!send This is a mere test message :D</string>
     <string name="send_message_description">As long as you\'ve synced your device and Discord account with Hermes, you can send messages to specific numbers or contact names:</string>
     <string name="send_message_success">Send message success.</string>
+    <string name="invite_hermes">Before continuing on to the next step, you\'ll want to invite Hermes to your server:</string>
+    <string name="btn_invite_hermes">Invite Hermes</string>
 </resources>

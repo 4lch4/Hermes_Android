@@ -14,19 +14,16 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="RippleButtonStyle" parent="Material.Drawable.Ripple.Touch">
-        <item name="android:background">@drawable/btn_generate_token</item>
-        <item name="rd_rippleColor">@color/darkBlurple</item>
-        <item name="rd_leftPadding">1dp</item>
-        <item name="rd_topPadding">1dp</item>
-        <item name="rd_rightPadding">1dp</item>
-        <item name="rd_bottomPadding">2dp</item>
-        <item name="rd_cornerRadius">4dp</item>
-        <item name="rd_backgroundColor">@color/blurple</item>
+    <style name="DigitsTheme" parent="android:Theme.Light">
+        <item name="android:textColorPrimary">@color/fullWhite</item>
+        <item name="android:textColorSecondary">@color/greyple</item>
+        <item name="android:windowBackground">@color/darkNotBlack</item>
+        <item name="android:textColorLink">@color/darkBlurple</item>
+        <item name="dgts__accentColor">@color/blurple</item>
     </style>
 
     <style name="ActionBarThemeOverlay" parent="">

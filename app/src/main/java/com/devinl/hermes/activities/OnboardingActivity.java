@@ -3,6 +3,7 @@ package com.devinl.hermes.activities;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -31,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.devinl.hermes.utils.Constants.INVITE_LINK;
 import static com.devinl.hermes.utils.KeyUtility.generateToken;
 import static com.devinl.hermes.utils.KeyUtility.updateUser;
 import static com.devinl.hermes.utils.PrefManager.checkPermissions;
@@ -39,6 +41,7 @@ public class OnboardingActivity extends BaseActivity {
     private static final String LOG_TAG = "OnboardingActivity";
     private static final int ANIMATION_DURATION = 1000;
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private boolean mAuthenticated = false;
     private boolean mSynchronized = false;
     private DigitsAuthButton mAuthButton;
     private TextView mCommandDescription;
@@ -76,10 +79,13 @@ public class OnboardingActivity extends BaseActivity {
         mBtnNext = (Button) findViewById(R.id.btn_next);
         mBtnBack = (Button) findViewById(R.id.btn_back);
 
-        mUserToken = generateToken(10);
-
         mPref = new PrefManager(this);
-        mPref.setUserToken(mUserToken);
+        mUserToken = mPref.getUserToken();
+
+        if (mUserToken.length() == 0) {
+            mUserToken = generateToken(10);
+            mPref.setUserToken(mUserToken);
+        }
 
         mLayouts = new int[]{
                 R.layout.onboarding_slide_1,
@@ -115,10 +121,17 @@ public class OnboardingActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 int curr = getItem(+1);
-                if (curr < mLayouts.length)
-                    mViewPager.setCurrentItem(curr);
-                else {
+
+                if (curr < mLayouts.length) {
+                    if (curr == 2 && !mAuthenticated) {
+                        Toast.makeText(OnboardingActivity.this, "Please activate with your cell phone before continuing.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        mViewPager.setCurrentItem(curr);
+                    }
+                } else if (mSynchronized) {
                     launchMainActivity();
+                } else {
+                    Toast.makeText(OnboardingActivity.this, "Please make sure to synchronize your account before continuing on.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -150,6 +163,7 @@ public class OnboardingActivity extends BaseActivity {
     /**
      * Add the bottom dots to the bottom of the current page based on the page loaded. This ensures
      * the correct dot is highlighted for each page loaded.
+     *
      * @param currentPage
      */
     private void addBottomDots(int currentPage) {
@@ -190,12 +204,6 @@ public class OnboardingActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 addBottomDots(position);
 
-                if (position == 2 && !mSynchronized) {
-                    mBtnBack.callOnClick();
-                    Toast.makeText(OnboardingActivity.this, "Please synchronize your Discord account first.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
                 if (position > 0)
                     mBtnBack.setVisibility(View.VISIBLE);
                 else
@@ -207,6 +215,15 @@ public class OnboardingActivity extends BaseActivity {
                     mAuthButton.setBackground(getResources().getDrawable(R.drawable.btn_use_phone_number, null));
                     mAuthButton.setCallback(getAuthButtonCallback());
 
+                    Button inviteButton = (Button) mViewPager.findViewById(R.id.btn_invite_hermes);
+                    inviteButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(INVITE_LINK));
+                            startActivity(browserIntent);
+                        }
+                    });
+                } else if (position == 2) {
                     mCommandDescription = (TextView) mViewPager.findViewById(R.id.command_description);
                     mCommandTemplate = (TextView) mViewPager.findViewById(R.id.command_template);
                     mCommandTemplate.setText("h!sync " + mUserToken);
@@ -229,16 +246,17 @@ public class OnboardingActivity extends BaseActivity {
      * Begins the second step of the user authorization process.
      */
     private void initializeSecondAuthStep() {
+        mAuthenticated = true;
         mAuthButton.setEnabled(false);
+
+        // Fade out step 1
         mAuthButton.animate().alpha(0f).setDuration(ANIMATION_DURATION).start();
         mAuthDescription.animate().alpha(0f).setDuration(ANIMATION_DURATION).start();
-        mCommandTemplate.animate().alpha(1f).setDuration(ANIMATION_DURATION).start();
-        mCommandDescription.animate().alpha(1f).setDuration(ANIMATION_DURATION).start();
 
-        mViewPager.findViewById(R.id.slide_2_title).animate().alpha(0f).setDuration(ANIMATION_DURATION).start();
-        mViewPager.findViewById(R.id.command_initiate_success).animate().alpha(1f).setDuration(ANIMATION_DURATION).start();
-        mViewPager.findViewById(R.id.command_failure_description).animate().alpha(1f).setDuration(ANIMATION_DURATION).start();
-        mViewPager.findViewById(R.id.command_initiate_failure).animate().alpha(1f).setDuration(ANIMATION_DURATION).start();
+        // Fade in step 2
+        mViewPager.findViewById(R.id.btn_invite_hermes).setEnabled(true);
+        mViewPager.findViewById(R.id.btn_invite_hermes).animate().alpha(1f).setDuration(ANIMATION_DURATION).start();
+        mViewPager.findViewById(R.id.slide_2_invite_hermes).animate().alpha(1f).setDuration(ANIMATION_DURATION).start();
     }
 
     /**

@@ -36,8 +36,7 @@ public class SectionsPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
-        return 3;
+        return mLayouts.length;
     }
 
     @Override
@@ -56,10 +55,10 @@ public class SectionsPagerAdapter extends PagerAdapter {
         switch (position) {
             case 0:
                 return mContext.getResources().getString(R.string.onboarding_slide_1_title);
+
             case 1:
-                return mContext.getResources().getString(R.string.onboarding_slide_2_title);
             case 2:
-                return mContext.getResources().getString(R.string.onboarding_slide_3_title);
+                return mContext.getResources().getString(R.string.onboarding_slide_2_title);
         }
         return null;
     }

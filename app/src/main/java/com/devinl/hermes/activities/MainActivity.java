@@ -28,7 +28,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TwitterAuthConfig authConfig = new TwitterAuthConfig(getTwitterKey(this), getTwitterSecret(this));
-        Fabric.with(this, new Crashlytics(), new Digits.Builder().build(), new TwitterCore(authConfig));
+        Fabric.with(this, new Crashlytics(), new Digits.Builder().withTheme(R.style.DigitsTheme).build(), new TwitterCore(authConfig));
 
         if (new PrefManager(this).isFirstTimeLaunch()) {
             startActivity(new Intent(this, OnboardingActivity.class));
@@ -43,11 +43,6 @@ public class MainActivity extends BaseActivity {
         checkPermissions(this);
     }
 
-    /**
-     * Initializes the controls used by the Activity, such as the mStartButton and mPauseButton.
-     * Also detects if the {@link HermesService} is currently running and hides the mStartButton if
-     * so.
-     */
     private void initializeControls() {
         Button primaryBtn = (Button) findViewById(R.id.primaryBtn);
 

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.devinl.hermes.R;
 import com.devinl.hermes.services.HermesService;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialModule;
@@ -55,7 +56,7 @@ public class BaseActivity extends AppCompatActivity {
     protected Toolbar activateToolbar(String title, boolean backDisabled) {
         if (backDisabled) {
             if (mToolbar == null) {
-                // mToolbar = (Toolbar) findViewById(R.id.app_bar);
+                mToolbar = (Toolbar) findViewById(R.id.app_bar);
                 if (mToolbar != null) {
                     mToolbar.setTitle(title);
                     setSupportActionBar(mToolbar);

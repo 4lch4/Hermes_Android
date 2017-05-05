@@ -3,17 +3,16 @@ package com.devinl.hermes.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.TextAppearanceSpan;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
 import com.crashlytics.android.Crashlytics;
@@ -32,6 +31,10 @@ import static com.devinl.hermes.utils.KeyUtility.getTwitterKey;
 import static com.devinl.hermes.utils.KeyUtility.getTwitterSecret;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private ActionBarDrawerToggle mToggle;
+    private NavigationView mNavView;
+    private DrawerLayout mDrawer;
+    private Button mPrimaryBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,18 +49,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         setContentView(R.layout.activity_main);
         initializeControls();
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -98,35 +89,43 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_home) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_data) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_settings) {
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     private void initializeControls() {
-        Button primaryBtn = (Button) findViewById(R.id.primaryBtn);
+        mPrimaryBtn = (Button) findViewById(R.id.primaryBtn);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNavView = (NavigationView) findViewById(R.id.nav_view);
+
+        Toolbar toolbar = activateToolbar("Hermes Direct", true);
+        mToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        mDrawer.addDrawerListener(mToggle);
+        mToggle.syncState();
+        mNavView.setNavigationItemSelectedListener(this);
+        mNavView.getMenu().getItem(0).setChecked(true);
 
         if (isHermesServiceOn()) {
-            primaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_pause_circle_outline).color(Color.WHITE));
-            primaryBtn.setOnClickListener(getPauseButtonListener());
+            mPrimaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_pause_circle_outline).color(Color.WHITE));
+            mPrimaryBtn.setOnClickListener(getPauseButtonListener());
         } else {
-            primaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_play_circle_outline).color(Color.WHITE));
-            primaryBtn.setOnClickListener(getStartButtonListener());
+            mPrimaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_play_circle_outline).color(Color.WHITE));
+            mPrimaryBtn.setOnClickListener(getStartButtonListener());
         }
+
+        MenuItem configTitle = mNavView.getMenu().findItem(R.id.nav_config_title);
+        SpannableString s = new SpannableString(configTitle.getTitle());
+        s.setSpan(new TextAppearanceSpan(this, R.style.WhiteTextStyle), 0, s.length(), 0);
+        configTitle.setTitle(s);
     }
 
     /**

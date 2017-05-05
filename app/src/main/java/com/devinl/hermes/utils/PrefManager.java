@@ -36,6 +36,11 @@ public class PrefManager {
         return mPref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
 
+    public static boolean isFirstTimeLaunch(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, 0);
+        return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
+    }
+
     public void setFirstTimeLaunch(boolean isFirstTime) {
         mEditor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
         mEditor.commit();

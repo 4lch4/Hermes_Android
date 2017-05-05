@@ -48,4 +48,8 @@
     <string name="send_message_success">Send message success.</string>
     <string name="invite_hermes">Before continuing on to the next step, you\'ll want to invite Hermes to your server:</string>
     <string name="btn_invite_hermes">Invite Hermes</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

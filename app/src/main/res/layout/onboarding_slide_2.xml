@@ -64,7 +64,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:alpha="0"
-        android:background="@drawable/btn_default_bg"
         android:enabled="false"
         android:text="@string/btn_invite_hermes"
         app:layout_constraintLeft_toLeftOf="parent"

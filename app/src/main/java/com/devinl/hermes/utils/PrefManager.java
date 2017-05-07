@@ -55,9 +55,10 @@ public class PrefManager {
 
         user.setUserId(mPref.getLong(USER_ID, 0));
         user.setUsername(mPref.getString(USERNAME, ""));
-        user.setUserToken(mPref.getString(USER_TOKEN, ""));
         user.setPhoneNum(mPref.getString(USER_PHONE_NUM, ""));
+        user.setUserToken(mPref.getString(USER_TOKEN, ""));
         user.setChannelId(mPref.getLong(USER_CHANNEL_ID, 0));
+        user.setDeviceToken(mPref.getString(FIREBASE_TOKEN, ""));
 
         return user;
     }

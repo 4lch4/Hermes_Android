@@ -1,10 +1,7 @@
 package com.devinl.hermes.activities;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -15,7 +12,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -24,7 +20,6 @@ import com.devinl.hermes.R;
 import com.devinl.hermes.fragments.HomeFragment;
 import com.devinl.hermes.fragments.StoredDataFragment;
 import com.devinl.hermes.models.User;
-import com.devinl.hermes.services.HermesService;
 import com.devinl.hermes.utils.PrefManager;
 import com.digits.sdk.android.Digits;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
@@ -38,10 +33,7 @@ import static com.devinl.hermes.utils.KeyUtility.getTwitterSecret;
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActionBarDrawerToggle mToggle;
     private NavigationView mNavView;
-    private HermesService mService;
-    private boolean mBound = false;
     private DrawerLayout mDrawer;
-    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,15 +86,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (id == R.id.nav_home) {
             replacePlaceholder(new HomeFragment());
         } else if (id == R.id.nav_data) {
-            if (mBound) {
-                User user = mService.getUser();
+            User user = new PrefManager(this).getUser();
                 if (user != null) {
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.fragment_placeholder, StoredDataFragment.newInstance(user)).addToBackStack("StoredData");
                     ft.commit();
                 } else
                     Toast.makeText(this, "Please create an account first.", Toast.LENGTH_SHORT).show();
-            }
         } else if (id == R.id.nav_settings) {
 
         }
@@ -118,21 +108,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void initializeControls() {
-        Intent intent = new Intent(this, HermesService.class);
-        bindService(intent, new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                HermesService.LocalBinder binder = (HermesService.LocalBinder) iBinder;
-                mService = binder.getService();
-                mBound = true;
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-                mBound = false;
-            }
-        }, BIND_AUTO_CREATE);
-
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavView = (NavigationView) findViewById(R.id.nav_view);
 

@@ -41,7 +41,6 @@ import static com.devinl.hermes.utils.KeyUtility.generateToken;
 
 public class HermesService extends Service implements Observer {
     private static final String LOG_TAG = "HermesService";
-    private final IBinder mBinder = new LocalBinder();
     private SmsManager mSmsManager;
     private PrefManager mPrefs;
     private User mUser;
@@ -108,21 +107,7 @@ public class HermesService extends Service implements Observer {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
-    public class LocalBinder extends Binder {
-        public HermesService getService() {
-            // Return this instance of LocalService so clients can call public methods
-            return HermesService.this;
-        }
-    }
-
-    public User getUser() {
-        if (mUser.getDeviceToken() == null)
-            mUser.setDeviceToken(mPrefs.getDeviceToken());
-
-        return mUser;
+        return null;
     }
 
     /**
@@ -172,23 +157,5 @@ public class HermesService extends Service implements Observer {
         }
 
         return "";
-    }
-
-    /**
-     * Check to see if {@link HermesService} is currently running and return a boolean indicating the
-     * answer.
-     *
-     * @return {@link Boolean}
-     */
-    public static boolean isHermesServiceOn(Context context) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (HermesService.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

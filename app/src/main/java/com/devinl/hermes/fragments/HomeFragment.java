@@ -1,5 +1,6 @@
 package com.devinl.hermes.fragments;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,12 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.devinl.hermes.R;
-import com.devinl.hermes.activities.MainActivity;
 import com.devinl.hermes.services.HermesService;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.MaterialIcons;
-
-import static com.devinl.hermes.services.HermesService.isHermesServiceOn;
 
 /**
  * A simple {@link Fragment} subclass for the Home fragment.
@@ -103,5 +101,22 @@ public class HomeFragment extends Fragment {
                 updateButton();
             }
         };
+    }
+
+    /**
+     * Check to see if {@link HermesService} is currently running and return a boolean indicating the
+     * answer.
+     *
+     * @return {@link Boolean}
+     */
+    public static boolean isHermesServiceOn(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (HermesService.class.getName().equals(service.service.getClassName()))
+                return true;
+        }
+
+        return false;
     }
 }

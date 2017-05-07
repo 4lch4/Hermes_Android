@@ -1,10 +1,18 @@
 package com.devinl.hermes.models;
 
+import android.content.Context;
+
+import com.devinl.hermes.utils.PrefManager;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+
+import java.io.Serializable;
+
 /**
  * Created by Alcha on 4/1/2017.
  */
 
-public class User {
+public class User implements Serializable {
     private String mDeviceToken;
     private String mUserToken;
     private String mUsername;
@@ -81,5 +89,24 @@ public class User {
 
     public void setDeviceToken(String deviceToken) {
         mDeviceToken = deviceToken;
+    }
+
+    public static User buildUserObject(DataSnapshot dataSnapshot, Context context) {
+        PrefManager manager = new PrefManager(context);
+        User user = new User();
+
+        user.setUserToken(dataSnapshot.getKey());
+        user.setUsername(dataSnapshot.child("username").getValue().toString());
+        user.setPhoneNum(dataSnapshot.child("phoneNum").getValue().toString());
+        user.setUserId(Long.parseLong(dataSnapshot.child("userId").getValue().toString()));
+        user.setChannelId(Long.parseLong(dataSnapshot.child("channelId").getValue().toString()));
+
+        if (dataSnapshot.child("deviceToken").getValue() == null) {
+            if (manager.getDeviceToken().length() > 0)
+                user.setDeviceToken(manager.getDeviceToken());
+        } else
+            user.setDeviceToken(dataSnapshot.child("deviceToken").getValue().toString());
+
+        return user;
     }
 }

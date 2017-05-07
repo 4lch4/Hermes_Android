@@ -1,9 +1,14 @@
 package com.devinl.hermes.activities;
 
+import android.content.ComponentName;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,16 +17,16 @@ import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.devinl.hermes.R;
+import com.devinl.hermes.fragments.HomeFragment;
+import com.devinl.hermes.fragments.StoredDataFragment;
+import com.devinl.hermes.models.User;
 import com.devinl.hermes.services.HermesService;
 import com.devinl.hermes.utils.PrefManager;
 import com.digits.sdk.android.Digits;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.MaterialIcons;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 
@@ -33,8 +38,10 @@ import static com.devinl.hermes.utils.KeyUtility.getTwitterSecret;
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActionBarDrawerToggle mToggle;
     private NavigationView mNavView;
+    private HermesService mService;
+    private boolean mBound = false;
     private DrawerLayout mDrawer;
-    private Button mPrimaryBtn;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         setContentView(R.layout.activity_main);
         initializeControls();
+
+        replacePlaceholder(new HomeFragment());
     }
 
     @Override
@@ -59,13 +68,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
     }
 
     @Override
@@ -85,14 +87,22 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-
+            replacePlaceholder(new HomeFragment());
         } else if (id == R.id.nav_data) {
-
+            if (mBound) {
+                User user = mService.getUser();
+                if (user != null) {
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.fragment_placeholder, StoredDataFragment.newInstance(user)).addToBackStack("StoredData");
+                    ft.commit();
+                } else
+                    Toast.makeText(this, "Please create an account first.", Toast.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.nav_settings) {
 
         }
@@ -101,8 +111,28 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
+    private void replacePlaceholder(Fragment fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_placeholder, fragment);
+        ft.commit();
+    }
+
     private void initializeControls() {
-        mPrimaryBtn = (Button) findViewById(R.id.primaryBtn);
+        Intent intent = new Intent(this, HermesService.class);
+        bindService(intent, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                HermesService.LocalBinder binder = (HermesService.LocalBinder) iBinder;
+                mService = binder.getService();
+                mBound = true;
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                mBound = false;
+            }
+        }, BIND_AUTO_CREATE);
+
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -114,53 +144,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mNavView.setNavigationItemSelectedListener(this);
         mNavView.getMenu().getItem(0).setChecked(true);
 
-        if (isHermesServiceOn()) {
-            mPrimaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_pause_circle_outline).color(Color.WHITE));
-            mPrimaryBtn.setOnClickListener(getPauseButtonListener());
-        } else {
-            mPrimaryBtn.setBackground(new IconDrawable(this, MaterialIcons.md_play_circle_outline).color(Color.WHITE));
-            mPrimaryBtn.setOnClickListener(getStartButtonListener());
-        }
-
         MenuItem configTitle = mNavView.getMenu().findItem(R.id.nav_config_title);
         SpannableString s = new SpannableString(configTitle.getTitle());
         s.setSpan(new TextAppearanceSpan(this, R.style.WhiteTextStyle), 0, s.length(), 0);
         configTitle.setTitle(s);
-    }
-
-    /**
-     * Build and return the {@link android.view.View.OnClickListener} for the mStartButton that
-     * starts the service if it isn't currently running.
-     *
-     * @return {@link android.view.View.OnClickListener}
-     */
-    public View.OnClickListener getStartButtonListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isHermesServiceOn())
-                    startService(new Intent(MainActivity.this, HermesService.class));
-
-                initializeControls();
-            }
-        };
-    }
-
-    /**
-     * Build and return the {@link android.view.View.OnClickListener} for the mPauseButton that
-     * stops the service if it is running.
-     *
-     * @return {@link android.view.View.OnClickListener}
-     */
-    public View.OnClickListener getPauseButtonListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isHermesServiceOn())
-                    stopService(new Intent(MainActivity.this, HermesService.class));
-
-                initializeControls();
-            }
-        };
     }
 }

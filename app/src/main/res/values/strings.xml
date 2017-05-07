@@ -52,4 +52,12 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="label_username">Username:</string>
+    <string name="label_user_id">User Id:</string>
+    <string name="label_user_token">User Token:</string>
+    <string name="label_channel_id">Channel Id:</string>
+    <string name="label_phone_number">Phone Number:</string>
+    <string name="label_device_token">Device Token:</string>
+    <string name="temp_placeholder">Temp Placeholder</string>
 </resources>

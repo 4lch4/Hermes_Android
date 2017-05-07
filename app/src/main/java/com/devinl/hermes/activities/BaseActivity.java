@@ -23,26 +23,8 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /** Initialize Iconify **/
+        // Initialize Iconify
         Iconify.with(new MaterialModule());
-    }
-
-    /**
-     * Check to see if {@link HermesService} is currently running and return a boolean indicating the
-     * answer.
-     *
-     * @return {@link Boolean}
-     */
-    protected boolean isHermesServiceOn() {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (HermesService.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

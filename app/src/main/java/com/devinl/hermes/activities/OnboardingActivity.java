@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.devinl.hermes.models.User.buildUserObject;
 import static com.devinl.hermes.utils.Constants.INVITE_LINK;
 import static com.devinl.hermes.utils.KeyUtility.generateToken;
 import static com.devinl.hermes.utils.KeyUtility.updateUser;
@@ -300,7 +301,7 @@ public class OnboardingActivity extends BaseActivity {
                     // Indicate user is synchronized
                     mSynchronized = true;
 
-                    User user = buildUserObject(dataSnapshot);
+                    User user = buildUserObject(dataSnapshot, OnboardingActivity.this);
 
                     updateUser(user, OnboardingActivity.this);
 
@@ -314,23 +315,5 @@ public class OnboardingActivity extends BaseActivity {
 
             }
         };
-    }
-
-    private User buildUserObject(DataSnapshot dataSnapshot) {
-        User user = new User();
-
-        user.setUserToken(dataSnapshot.getKey());
-        user.setUsername(dataSnapshot.child("username").getValue().toString());
-        user.setPhoneNum(dataSnapshot.child("phoneNum").getValue().toString());
-        user.setUserId(Long.parseLong(dataSnapshot.child("userId").getValue().toString()));
-        user.setChannelId(Long.parseLong(dataSnapshot.child("channelId").getValue().toString()));
-
-        if (dataSnapshot.child("deviceToken").getValue() == null) {
-            if (mPref.getDeviceToken().length() > 0)
-                user.setDeviceToken(mPref.getDeviceToken());
-        } else
-            user.setDeviceToken(dataSnapshot.child("deviceToken").getValue().toString());
-
-        return user;
     }
 }

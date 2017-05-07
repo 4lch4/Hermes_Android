@@ -40,6 +40,7 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+
         <receiver android:name=".services.BootBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -47,6 +48,7 @@
         </receiver>
 
         <service android:name=".services.HermesService" />
+
         <service
             android:name=".services.FCMIdService"
             android:enabled="true"

@@ -1,6 +1,7 @@
 package com.devinl.hermes.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -27,6 +28,7 @@ import com.twitter.sdk.android.core.TwitterCore;
 
 import io.fabric.sdk.android.Fabric;
 
+import static com.devinl.hermes.utils.Constants.INVITE_LINK;
 import static com.devinl.hermes.utils.KeyUtility.getTwitterKey;
 import static com.devinl.hermes.utils.KeyUtility.getTwitterSecret;
 
@@ -93,9 +95,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     ft.commit();
                 } else
                     Toast.makeText(this, "Please create an account first.", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_invite) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(INVITE_LINK)));
+        }/* else if (id == R.id.nav_settings) {
 
-        }
+        }*/
 
         mDrawer.closeDrawer(GravityCompat.START);
         return true;

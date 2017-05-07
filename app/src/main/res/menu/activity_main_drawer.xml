@@ -17,9 +17,13 @@
                 android:icon="@drawable/ic_save"
                 android:title="Stored Data" />
             <item
+                android:id="@+id/nav_invite"
+                android:icon="@drawable/ic_mail"
+                android:title="Invite Hermes" />
+            <!--<item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_settings"
-                android:title="Settings" />
+                android:title="Settings" />-->
         </menu>
     </item>
 </menu>

@@ -87,7 +87,7 @@ public class HermesService extends Service implements Observer {
         WakefulBroadcastReceiver.completeWakefulIntent(intent);
 
         // Return START_STICKY to ensure service stays running
-        return START_STICKY;
+        return START_REDELIVER_INTENT;
     }
 
     @Override

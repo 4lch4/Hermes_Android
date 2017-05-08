@@ -3,7 +3,6 @@ package com.devinl.hermes.fragments;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,8 +12,6 @@ import android.widget.Button;
 
 import com.devinl.hermes.R;
 import com.devinl.hermes.services.HermesService;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.MaterialIcons;
 
 /**
  * A simple {@link Fragment} subclass for the Home fragment.
@@ -59,10 +56,10 @@ public class HomeFragment extends Fragment {
      */
     private void updateButton() {
         if (isHermesServiceOn(getContext())) {
-            mPrimaryBtn.setBackground(new IconDrawable(getContext(), MaterialIcons.md_pause_circle_outline).color(Color.WHITE));
+            mPrimaryBtn.setText(getText(R.string.pause_button_desc));
             mPrimaryBtn.setOnClickListener(getPauseButtonListener());
         } else {
-            mPrimaryBtn.setBackground(new IconDrawable(getContext(), MaterialIcons.md_play_circle_outline).color(Color.WHITE));
+            mPrimaryBtn.setText(getText(R.string.start_button_desc));
             mPrimaryBtn.setOnClickListener(getStartButtonListener());
         }
     }

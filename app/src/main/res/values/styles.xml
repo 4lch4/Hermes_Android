@@ -14,6 +14,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="ButtonTheme" parent="Material.Drawable.Ripple.Touch">
+        <item name="android:background">@color/blurple</item>
+        <item name="rd_backgroundColor">@color/blurple</item>
+        <item name="rd_rippleColor">@color/darkBlurple</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
